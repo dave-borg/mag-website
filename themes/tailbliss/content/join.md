@@ -25,7 +25,7 @@ Welcome to our guide on purchasing shares within our organization. This overview
   - Buyers will be provided with contact details of sellers who have shares available.
 
 ### Step 3: Marketing Shares
-If there is no waiting list, the seller can advertise their shares through other means, like aviation magazines or local flight schools.
+If there is no waiting list, the seller can advertise their shares through other means, like aviation magazines or local flight schools. 
 
 ## For Non-Members
 
