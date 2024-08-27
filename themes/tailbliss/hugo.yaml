@@ -1,5 +1,5 @@
 baseURL: ''
-title: TailBliss
+title: Melbourne Aviation Group
 languageCode: en-us
 DefaultContentLanguage: en
 enableEmoji: true
@@ -46,11 +46,11 @@ markup:
       xhtml: false
 
 params:
-  author: Nusser Studios
+  author: Melbourne Aviation Group
   authorimage: ../assets/images/global/author.webp
   og_image: /images/tailbliss-cover.png
-  moto: "Super Fast, and Flexible"
-  description: "A Hugo theme built with love, using TailwindCSS 3, Alpine.JS, and Hugo Pipes. Images are optimized for use with Hugo Pipes for WebP format."
+  moto: "Best aircraft at the lowest cost"
+  description: "MAG is the most successful and longest running private flying group in Australia. MAG is run entirely not-for-profit operating out of Moorabbin Airport (YMMB), Melbourne’s largest GA airport."
   disable_theme_toggle: false
   disable_stay_uptodate: false
 
@@ -58,20 +58,26 @@ params:
     heading: "Our mission"
     image: "images/pages/our-mission.png"
     content:
-      - text: "Sagittis scelerisque nulla cursus in enim consectetur quam. Dictum urna sed consectetur neque tristique pellentesque. Blandit amet, sed aenean erat arcu morbi. Cursus faucibus nunc nisl netus morbi vel porttitor vitae ut. Amet vitae fames senectus vitae."
-      - text: "Sollicitudin tristique eros erat odio sed vitae, consequat turpis elementum. Lorem nibh vel, eget pretium arcu vitae. Eros eu viverra donec ut volutpat donec laoreet quam urna. Sollicitudin tristique eroserat odio sed vitae, consequat turpis elementum. Lorem nibh vel, eget pretium arcu vitae. Eros eu viverra donec ut volutpat donec laoreet quam urna."
-      - text: "Rhoncus nisl, libero egestas diam fermentum dui. At quis tincidunt vel ultricies. Vulputate aliquet velit faucibus semper. Pellentesque in venenatis vestibulum consectetur nibh id. In id ut tempus egestas. Enim sit aliquam nec, a. Morbi enim fermentum lacus in. Viverra."
+      - text: "Melbourne Aviation Group is a co-operative flying group founded in 1963. MAG is wholly owned by the shareholder pilots through the issue of shares in equal quantity to each member."
+      - text: "The aim of the Group is to provide to the members access to aircraft owned by the Company free of the normal hiring restrictions imposed by Schools and private owners, and at the lowest cost consistent with viable operations."
   p2:
-    heading: "Just in time for Hacktoberfest with JIT Tailwind."
+    heading: "How do I join?"
     image: "images/pages/hacktoberfest.jpg"
     content:
-      - text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur at purus non enim commodo tincidunt vel in nulla. Aenean pretium dolor non ultricies bibendum. Etiam quis blandit enim. Nunc condimentum ut lorem in faucibus. Phasellus varius ligula et commodo tristique. Nunc sodales nisl nec laoreet vehicula. Donec velit nibh, sollicitudin at nulla a, egestas dignissim eros. Sed lacinia hendrerit interdum. Vestibulum pellentesque sem venenatis nisl tempor accumsan sit amet tempus felis. Mauris leo diam, porttitor nec bibendum id, tempus ac nulla. Etiam congue ornare erat at convallis. Donec in nisi dapibus, mattis risus vel, imperdiet enim. Donec fermentum sit amet tortor nec tincidunt. Nam nec lectus tortor. Nunc sit amet laoreet orci, porta ornare massa. Phasellus eget lorem mi. Nam eleifend ultricies sapien, quis mollis leo bibendum at. Quisque viverra lorem sit amet magna aliquet, et dignissim arcu eleifend."
-  p3:
-    heading: "Backed by world-renowned investors"
-    content:
-      - text: "Sagittis scelerisque nulla cursus in enim consectetur quam. Dictum urna sed consectetur neque tristique pellentesque. Blandit amet, sed aenean erat arcu morbi. Cursus faucibus nunc nisl netus morbi vel porttitor vitae ut. Amet vitae fames senectus vitae."
+      - text: "MAG is a non-profit Pty Ltd company that owns and operates two aircraft for the exclusive use of its shareholders. To join MAG you need to purchase one of the shares from an existing member."
+      - text: "If you'd like to learn more about joining MAG, enter your details here and we'll be in touch."
     links:
-      - text: Meet our investors and advisors
+      - text: "Detailed Sale of Share policy can be found here"
+        url: "#"
+  p3:
+    heading: "Our Aircraft"
+    content:
+      - text: "MAG has for many years been flying two aircraft, the Piper Archer and Cessna 182. Both aircraft are always IFR capable and impeccably maintained"
+      - text: "This mix of aircraft cover a majority of members’ missions, from local area training and short trips, to weeks-long outback adventures. All while not being overly demanding to fly."
+    links:
+      - text: VH-DKC - 2006 Cessna 182T
+        url: "#"
+      - text: VH-OKY - 1999 Piper Archer III
         url: "#"
     logos:
       - identifier: a
@@ -83,100 +89,96 @@ params:
       - identifier: e
       - identifier: f
   p4:
-    heading: "From the blog"
+    heading: "Latest news"
     content:
-      - text: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsa libero labore natus atque, ducimus sed."
+      - text: "Latest news and updates from Melbourne Aviation Group."
   p5:
-    heading: "Stay Up to Date"
+    heading: "Learn more"
     content:
-      - text: "Sagittis scelerisque nulla cursus in enim consectetur quam. Dictum urna sed consectetur neque tristique pellentesque."
+      - text: "Learn more about Melbourne Aviation Group and how you can get involved."
     action: "#"
     label: "Email address"
     placeholder: "Enter your email"
-    button: "Notify me"
+    button: "Learn more..."
 
   social_media:
     github:
-      enabled: true
+      enabled: false
       url: 'https://github.com/nusserstudios'
     facebook:
       enabled: true
-      url: 'https://facebook.com/nusserstudios'
+      url: 'https://www.facebook.com/profile.php?id=61561489734466'
     instagram:
-      enabled: true
+      enabled: false
       url: 'https://instagram.com/nusserstudios'
     twitter:
-      enabled: true
+      enabled: false
       url: 'https://twitter.com/nusserstudios'
     
 
 menu:
   main:
-    - identifier: prose
-      name: Prose
-      url: /prose/
+    - identifier: join
+      name: Joining MAG
+      url: /join/
       weight: 10
     - identifier: about
       name: About
       url: /about/
-      weight: 20
-    - identifier: categories
-      pre: dropdown
-      name: Categories
       weight: 30
-    - identifier: dropdown
-      pre: complexdropdown
-      name: Dropdown
+    - identifier: aircraft
+      pre: dropdown
+      name: Our Aircraft
+      weight: 30
+    - identifier: faq
+      name: FAQ
+      url: /about/
       weight: 40
     - identifier: contact
       name: Contact
       url: /contact/
       weight: 50
-  categories:
-    - identifier: prose
-      name: Prose
+  aircraft: 
+    - identifier: c182
+      name: VH-DKC - 2006 Cessna 182T
       url: /prose/
       weight: 10
-    - identifier: about
-      name: About
+    - identifier: pa28
+      name: VH-OKY - 1999 Piper Archer III
       url: /about/
       weight: 20
-  dropdown:
-    - identifier: appearance
-      pre: stars # can be stars, comments or piechart
-      name: Appearance
-      post: "Easy customization"
-      url: "#"
-      weight: 10
-    - identifier: comments
-      pre: comments # can be stars, comments or piechart
-      name: Comments
-      post: "Check your latest comments"
-      url: "#"
-      weight: 20
-    - identifier: analytics
-      pre: piechart # can be stars, comments or piechart
-      name: Analytics
-      post: "Take a look at your statistics"
-      url: "#"
-      weight: 30
+  # dropdown:
+  #   - identifier: appearance
+  #     pre: stars # can be stars, comments or piechart
+  #     name: Appearance
+  #     post: "Easy customization"
+  #     url: "#"
+  #     weight: 10
+  #   - identifier: comments
+  #     pre: comments # can be stars, comments or piechart
+  #     name: Comments
+  #     post: "Check your latest comments"
+  #     url: "#"
+  #     weight: 20
+  #   - identifier: analytics
+  #     pre: piechart # can be stars, comments or piechart
+  #     name: Analytics
+  #     post: "Take a look at your statistics"
+  #     url: "#"
+  #     weight: 30
   footer:
+    - identifier: join
+      name: Joining MAG
+      url: /about/
+      weight: 10
     - identifier: about
       name: About
       url: /about/
-      weight: 10
-    - identifier: blog
-      name: Blog
-      url: /categories/blog/
       weight: 20
-    - identifier: news
-      name: News
-      url: /categories/news/
+    - identifier: privacy
+      name: Privacy
+      url: /privacy/
       weight: 30
-    - identifier: prose
-      name: Prose
-      url: /prose/
-      weight: 40
     - identifier: contact
       name: Contact
       url: /contact/
@@ -197,8 +199,8 @@ privacy:
   googleAnalytics:
     anonymizeIP: true
     disable: false
-    respectDoNotTrack: false
-    useSessionStorage: false
+    respectDoNotTrack: true
+    useSessionStorage: true
   instagram:
     disable: false
     simple: false

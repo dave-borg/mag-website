@@ -1,12 +1,12 @@
 ---
-title: "Blog Post 1"
+title: "Wash and Polish"
 date: 2022-06-18T11:10:36+08:00
 draft: false
 language: en
 featured_image: ../assets/images/featured/featured-img-placeholder.png
-summary: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed cursus, odio nec venenatis lacinia, lacus lectus varius nisi, in tristique mi purus ut libero.
+summary: The weather was a little bleak on the 11 May when the last wash and polish was held which probably explains the relatively low numbers attending. Thanks to those who did attend and for their efforts in cleaning up the aircraft.
 description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed cursus, odio nec venenatis lacinia, lacus lectus varius nisi, in tristique mi purus ut libero. Vestibulum vel convallis felis. Ut finibus lorem vestibulum lobortis rhoncus.
-author: TailBliss
+author: Bill Holmes
 authorimage: ../assets/images/global/author.webp
 categories: Blog
 tags: Blog

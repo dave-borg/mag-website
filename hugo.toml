@@ -1,5 +1,5 @@
-baseURL = 'https://example.org/'
+baseURL = 'https://www.mag.com.au/'
 languageCode = 'en-us'
-title = 'My New Hugo Site'
+title = 'Melbourne Aviation Group'
 
 theme = 'tailbliss'

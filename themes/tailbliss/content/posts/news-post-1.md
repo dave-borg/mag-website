@@ -1,17 +1,24 @@
 ---
-title: "News Post 1"
-date: 2022-05-18T11:10:36+08:00
+title: "OKY Panel Upgrade"
+date: 2022-08-18T11:10:36+08:00
 draft: false
 language: en
 featured_image: ../assets/images/featured/featured-img-placeholder.png
-summary: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed cursus, odio nec venenatis lacinia, lacus lectus varius nisi, in tristique mi purus ut libero.
+summary: OKY is booked in for a panel upgrade. 
 description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed cursus, odio nec venenatis lacinia, lacus lectus varius nisi, in tristique mi purus ut libero. Vestibulum vel convallis felis. Ut finibus lorem vestibulum lobortis rhoncus.
-author: TailBliss
+author: Dave Borgeest
 authorimage: ../assets/images/global/author.webp
 categories: News
 tags: News
 ---
-__Advertisement :smile:__
+
+The May newsletter reported that there would be a push to repair the ailing autopilot during the 100 hourly service which was successful. There have been some problems reported with the Aspen however we are hopeful the aircraft will remain serviceable until the time when it goes in for the dashboard upgrade.
+
+The project manager for the OKY upgrade, Rolf Blomstedt, led the specification and tender evaluation process for the upgrade. The contract to do the upgrade has been awarded to Avionics 2000 located at Essendon. Rolf will continue to be the key contact with the contractor throughout the upgrade.
+
+All of the new electronics has now been received into store and has been paid for thanks to the share call. The current plan is for OKY to come off line on the 11th of November. The contractor has previously advised that the upgrade will take around six weeks. The date and the length of the work may need to change as detailed planning may reveal other constraints.
+
+ __Advertisement :smile:__
 
 - __[pica](https://nodeca.github.io/pica/demo/)__ - high quality and fast image
   resize in browser.
