@@ -1,6 +1,6 @@
 ---
 title: "Joining MAG"
-date: 2024-08-27T11:10:36+08:00
+date: 2024-06-27T11:10:36+08:00
 draft: false
 language: en
 description: Joining MAG
