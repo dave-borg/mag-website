@@ -26,9 +26,9 @@ jobs:
     
     - name: Deploy to server
       env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        SSH_HOST: ${{ secrets.SSH_HOST }}
-        SSH_USER: ${{ secrets.SSH_USER }}
+        SSH_PRIVATE_KEY: ${{ secrets.MAG_SSH_PRIVATE_KEY }}
+        SSH_HOST: ${{ secrets.MAG_SSH_HOST }}
+        SSH_USER: ${{ secrets.MAG_SSH_USER }}
       run: |
-        ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY }}"
-        scp -r public/* $SSH_USER@$SSH_HOST:/path/to/deployment/directory
+        ssh-add - <<< "${{ secrets.MAG_SSH_PRIVATE_KEY }}"
+        scp -r public/* $MAG_SSH_USER@$MAG_SSH_HOST:/path/to/deployment/directory
