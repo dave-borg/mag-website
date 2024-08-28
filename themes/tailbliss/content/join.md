@@ -3,69 +3,27 @@ title: "Joining MAG"
 date: 2024-06-27T11:10:36+08:00
 draft: false
 language: en
+layout: "single-join"
 description: Joining MAG
-featured_image: ../assets/images/featured/featured-img-placeholder.png
+featured_image: ../assets/images/global/logo.png
 ---
 
-# Share Purchase Process
+## How to Join MAG
 
-## Introduction
-Welcome to our guide on purchasing shares within our organization. This overview will walk you through the process, whether you're an existing pilot or a new member looking to join. We aim to make this as clear and straightforward as possible.
+1. **Express Interest**
+   - Contact MAG to express your interest in joining. Fill in the form on this page, or email [membership@mag.com.au](mailto:membership@mag.com.au)
 
-## General Procedure
+2. **Purchase a Share**
+   - Any members looking to sell their share will be in contact. There is no fixed price for a share in the group, it is negotiated between the buyer and seller. You will be provided a copy of our latest financial statement in order to form a view on valuation.
+   - We're more than happy to answer any questions about the operation of the group at any point. 
 
-### Step 1: Initial Contact
-- **Seller**: Reach out to the Chairman or Secretary to check if there's a waiting list of interested buyers and to get the latest share sale price.
-- **Buyer**: Contact the Chairman or Secretary to find out if there are shares available for purchase or if there's a waiting list.
+3. **Complete Familiarization Flight**
+   - Conduct a flight to ensure proficiency and your flying credentials are current. 
 
-### Step 2: Registering Interest
-- **If there’s a waiting list**: The seller will receive the email addresses of potential buyers.
-- **If no waiting list**: 
-  - Sellers can list their intent to sell with the Secretary.
-  - Buyers will be provided with contact details of sellers who have shares available.
+4. **Finalize the Purchase**
+   - Complete the necessary transaction and paperwork with the seller and our company secretary in order to complete the share transfer
 
-### Step 3: Marketing Shares
-If there is no waiting list, the seller can advertise their shares through other means, like aviation magazines or local flight schools. 
+5. **Welcome to MAG!**
+   - Once all steps are completed, you are officially a MAG member and can start flying.
 
-## For Non-Members
 
-### Step 4: Agreement and Documentation
-Once an agreement is reached:
-- The seller informs the Secretary of the buyer’s details and the agreed sale price.
-- The Secretary will send the buyer:
-  - **Share Transfer Form**
-  - **Service Agreement**
-  - **New Member Entry Form**
-  - **Engineering Papers**
-  - **Previous Year’s Financial Report**
-
-### Step 5: Preparing for the Purchase
-- **Buyer**: Review and complete the necessary forms and agreements.
-- **Seller**: Receive a reconciliation statement from the Secretary for any outstanding dues.
-
-### Step 6: Familiarisation Flight
-- The buyer arranges a familiarisation flight with a nominated Flight Instructor.
-- The buyer submits the completed Engineering Paper to the Instructor before the flight.
-- If the flight is successful, the Instructor signs the New Member Entry Form.
-
-### Step 7: Completing the Transaction
-- The buyer and seller finalize the share transfer and submit the necessary documents to the Secretary.
-- The buyer pays the joining fee, check flight cost, and any applicable levies.
-
-### Step 8: Final Approval
-Once all documents and payments are received:
-- The buyer is officially recognized as a shareholder and authorized to fly MAG aircraft.
-- The Share Transfer Form is stamped, and the ASIC share register is updated.
-
-## For Supernumerary Members
-
-### Step 4: Documentation
-- The Secretary sends the buyer a Share Transfer Form with details of the sale procedure.
-- The buyer completes the form and settles any remaining balance with the seller.
-
-### Step 5: Finalizing the Transfer
-- The seller completes their portion of the Share Transfer Form and returns it to the Secretary.
-- The Secretary processes the transfer, updates the ASIC share register, and officially welcomes the buyer as a shareholder.
-
-## Conclusion
-We hope this guide helps you understand the share purchase process. If you have any questions, feel free to reach out to the Chairman or Secretary for further assistance. Happy flying!

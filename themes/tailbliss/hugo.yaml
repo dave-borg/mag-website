@@ -51,7 +51,7 @@ params:
   og_image: /images/tailbliss-cover.png
   moto: "Best aircraft at the lowest cost"
   description: "MAG is the most successful and longest running private flying group in Australia. MAG is run entirely not-for-profit operating out of Moorabbin Airport (YMMB), Melbourne’s largest GA airport."
-  disable_theme_toggle: false
+  disable_theme_toggle: true
   disable_stay_uptodate: false
 
   p1:
@@ -76,9 +76,9 @@ params:
       - text: "This mix of aircraft cover a majority of members’ missions, from local area training and short trips, to weeks-long outback adventures. All while not being overly demanding to fly."
     links:
       - text: VH-DKC - 2006 Cessna 182T
-        url: "#"
+        url: "/vhdkc/"
       - text: VH-OKY - 1999 Piper Archer III
-        url: "#"
+        url: "/vhoky/"
   p4:
     heading: "Latest news"
     content:
@@ -113,17 +113,17 @@ menu:
       name: Joining MAG
       url: /join/
       weight: 10
-    - identifier: about
-      name: About
-      url: /about/
-      weight: 30
+    # - identifier: about
+    #   name: About
+    #   url: /about/
+    #   weight: 30
     - identifier: aircraft
       pre: dropdown
       name: Our Aircraft
       weight: 30
     - identifier: faq
       name: FAQ
-      url: /about/
+      url: /faq/
       weight: 40
     - identifier: contact
       name: Contact
@@ -132,11 +132,11 @@ menu:
   aircraft: 
     - identifier: c182
       name: VH-DKC - 2006 Cessna 182T
-      url: /prose/
+      url: /vhdkc/
       weight: 10
     - identifier: pa28
       name: VH-OKY - 1999 Piper Archer III
-      url: /about/
+      url: /vhoky/
       weight: 20
   # dropdown:
   #   - identifier: appearance
@@ -168,7 +168,7 @@ menu:
       weight: 20
     - identifier: privacy
       name: Privacy
-      url: /privacy/
+      url: /privacy-policy/
       weight: 30
     - identifier: contact
       name: Contact
