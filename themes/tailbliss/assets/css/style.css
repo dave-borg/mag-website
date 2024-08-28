@@ -188,6 +188,10 @@ table {
   /* 3 */
 }
 
+tr:nth-child(odd) {
+  background-color: rgba(233, 233, 233, 1);
+}
+
 /*
 1. Change the font styles in all browsers.
 2. Remove the margin in Firefox and Safari.

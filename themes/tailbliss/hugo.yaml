@@ -56,7 +56,7 @@ params:
 
   p1:
     heading: "Our mission"
-    image: "images/pages/our-mission.png"
+    image: "images/pages/dkc-oky.png"
     content:
       - text: "Melbourne Aviation Group is a co-operative flying group founded in 1963. MAG is wholly owned by the shareholder pilots through the issue of shares in equal quantity to each member."
       - text: "The aim of the Group is to provide to the members access to aircraft owned by the Company free of the normal hiring restrictions imposed by Schools and private owners, and at the lowest cost consistent with viable operations."
@@ -68,11 +68,11 @@ params:
       - text: "If you'd like to learn more about joining MAG, enter your details here and we'll be in touch."
     links:
       - text: "Detailed Sale of Share policy can be found here"
-        url: "#"
+        url: "/join/"
   p3:
     heading: "Our Aircraft"
     content:
-      - text: "MAG has for many years been flying two aircraft, the Piper Archer and Cessna 182. Both aircraft are always IFR capable and impeccably maintained"
+      - text: "MAG has for many years been flying two aircraft, the Cessna 182 and Piper Archer. Both aircraft are always IFR capable and impeccably maintained"
       - text: "This mix of aircraft cover a majority of members’ missions, from local area training and short trips, to weeks-long outback adventures. All while not being overly demanding to fly."
     links:
       - text: VH-DKC - 2006 Cessna 182T

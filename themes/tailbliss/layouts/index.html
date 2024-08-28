@@ -15,7 +15,7 @@
                     </p>
                 </div>
                 <div class="col-span-6">
-                    {{ $hero := resources.GetMatch "images/pages/tailbliss-rocket-indigo.png" }}
+                    {{ $hero := resources.GetMatch "images/pages/homepage-hero-img.png" }}
 
                     {{ $thumb := ($hero.Fill "400x400 webp q90") }}
                     {{ $large := ($hero.Fill "576x576 webp q90") }}
@@ -29,6 +29,85 @@
     </div>
 
     <!-- More main page content here... -->
+
+    <!-- Our Aircraft section -->
+    <div class="max-w-md px-4 mx-auto md:pt-24 md:pb-16 sm:max-w-3xl sm:px-6 lg:max-w-7xl lg:px-8">
+        
+        <div class="lg:grid lg:grid-cols-2 lg:items-center lg:gap-24"> 
+            
+            <table style='width: 500px; margin-bottom: 20px; '>
+                <tr style='background-color: rgba(255,255,255,0)'><td colspan="3"><img src="/images/aircraft-columns.png" style='margin-bottom: 20px; box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.127);'
+                    /></td></tr>   
+                <tr style='font-weight: bold'><td/><td class="text-left">VH-DKC</td><td class="text-left">VH-OKY</td></tr>
+                    <tr><td>Type</td><td>Cessna C182T</td><td>Piper Archer III</td></tr>
+                    <tr><td>Year</td><td>2006</td><td>1999</td></tr>
+                    <tr><td>Useful Load</td><td>538 kgs</td><td>1999</td></tr>
+                    <tr><td>$/hr Wet</td><td>2006</td><td>$235</td></tr>
+                    <tr><td>Cruise Speed</td><td>145kts</td><td>110kts</td></tr>
+                </table>
+            <div>
+                <h2 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-50 sm:text-4xl">
+                    {{ .Site.Params.P3.Heading }}
+                </h2>
+                {{ range .Site.Params.P3.Content }}
+                <p class="max-w-3xl mt-6 text-lg leading-7 text-gray-900 dark:text-white">
+                    {{ .text }}
+                </p>
+                {{ end }}
+                {{ range .Site.Params.P3.Links }}
+                <div class="my-6">
+                    <a href="{{ .url }}" class="text-base font-medium text-primary-400 dark:text-primary-100">
+                        {{ .text }}&nbsp&rarr;
+                    </a>
+                </div>
+                {{ end }}
+            </div>
+    </div>
+
+    <!-- How do I Join? -->
+    <div class="overflow-hidden sm:pt-6 lg:relative">
+        <div class="max-w-md px-4 mx-auto sm:max-w-3xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-2 lg:gap-12 lg:px-8">
+            <div>
+                <div class="md:mt-8">
+                    <div class="mt-6 sm:max-w-xl">
+                        <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl md:mt-16">
+                            {{ .Site.Params.P2.Heading }}
+                        </h2>
+                        {{ range .Site.Params.P2.Content }}
+                        <p class="pb-12 mt-6 text-lg text-gray-900 dark:text-white">
+                            {{ .text }}
+                        </p>
+                        {{ end }}
+                        </p>
+                        {{ range .Site.Params.P2.Links }}
+                <div class="my-6">
+                    <a href="{{ .url }}" class="text-base font-medium text-primary-400 dark:text-primary-100">
+                        {{ .text }}&nbsp&rarr;
+                    </a>
+                </div>
+                {{ end }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="sm:mx-auto sm:max-w-3xl sm:px-6" style='padding-bottom: 200px'>
+            <div class="md:py-12 sm:relative sm:mt-12 lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
+                <div class="hidden sm:block">
+                    <div class="absolute inset-y-0 w-screen left-1/2 rounded-l-3xl bg-gray-50 dark:bg-gray-900/10 lg:left-80 lg:right-0 lg:w-full"></div><svg class="absolute -mr-3 top-8 right-1/2 lg:left-0 lg:m-0" width="404" height="392" fill="none" viewBox="0 0 404 392" loading="lazy">
+                        <defs>
+                            <pattern id="837c3e70-6c3a-44e6-8854-cc48c737b659" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                                <rect x="0" y="0" width="4" height="4" class="text-gray-200 dark:text-gray-900/60" fill="currentcolor"></rect>
+                            </pattern>
+                        </defs>
+                        <rect width="404" height="392" fill="url(#837c3e70-6c3a-44e6-8854-cc48c737b659)"></rect>
+                    </svg>
+                </div>
+                <div class="relative pl-4 -mr-40 sm:mx-auto sm:max-w-3xl sm:px-0 lg:h-full lg:max-w-none lg:pl-12">
+                    {{ partial "join_form" . }}
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Our mission section -->
     <div class="relative my-4">
@@ -45,11 +124,11 @@
                     </svg>
                 </div>
                 <div class="relative w-full h-auto px-4 py-6 mx-auto sm:max-w-3xl sm:px-6 lg:px-0 lg:py-20">
-                    <div class="overflow-hidden shadow-xl rounded-2xl">
+                    <div class="overflow-hidden">
                         {{ $p1image := resources.Get .Site.Params.P1.Image }}
                         {{ with $p1image }}
                         {{ with .Resize (printf "%dx%d webp q90" .Width .Height) }}
-                        <img imgh src="{{ .RelPermalink }}" width="{{ .Width }}" height="{{ .Height }}" class="w-full h-auto" alt="P1" loading="lazy" />
+                        <img imgh src="/images/dkc-oky.png" width="{{ .Width }}" height="{{ .Height }}" class="w-full h-auto" alt="P1" loading="lazy" />
                         {{ end }}
                         {{ end }}
                     </div>
@@ -74,86 +153,7 @@
         </div>
     </div>
 
-    <!-- JITsection -->
-    <div class="overflow-hidden sm:pt-6 lg:relative">
-        <div class="max-w-md px-4 mx-auto sm:max-w-3xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-2 lg:gap-12 lg:px-8">
-            <div>
-                <div class="md:mt-8">
-                    <div class="mt-6 sm:max-w-xl">
-                        <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl md:mt-16">
-                            {{ .Site.Params.P2.Heading }}
-                        </h2>
-                        {{ range .Site.Params.P2.Content }}
-                        <p class="pb-12 mt-6 text-lg text-gray-900 dark:text-white">
-                            {{ .text }}
-                        </p>
-                        {{ end }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="sm:mx-auto sm:max-w-3xl sm:px-6">
-            <div class="md:py-12 sm:relative sm:mt-12 lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
-                <div class="hidden sm:block">
-                    <div class="absolute inset-y-0 w-screen left-1/2 rounded-l-3xl bg-gray-50 dark:bg-gray-900/10 lg:left-80 lg:right-0 lg:w-full"></div><svg class="absolute -mr-3 top-8 right-1/2 lg:left-0 lg:m-0" width="404" height="392" fill="none" viewBox="0 0 404 392" loading="lazy">
-                        <defs>
-                            <pattern id="837c3e70-6c3a-44e6-8854-cc48c737b659" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                                <rect x="0" y="0" width="4" height="4" class="text-gray-200 dark:text-gray-900/60" fill="currentcolor"></rect>
-                            </pattern>
-                        </defs>
-                        <rect width="404" height="392" fill="url(#837c3e70-6c3a-44e6-8854-cc48c737b659)"></rect>
-                    </svg>
-                </div>
-                <div class="relative pl-4 -mr-40 sm:mx-auto sm:max-w-3xl sm:px-0 lg:h-full lg:max-w-none lg:pl-12">
-                    {{ $p2image := resources.Get .Site.Params.P2.Image }}
-                    {{ with $p2image }}
-                    {{ with .Resize (printf "%dx%d webp q90" .Width .Height) }}
-                    <img imgh src="{{ .RelPermalink }}" width="{{ .Width }}" height="{{ .Height }}" alt="p2" class="w-full rounded-lg shadow-xl lg:h-full lg:w-auto lg:max-w-none" loading="lazy" />
-                    {{ end }}
-                    {{ end }}
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Sponsors section -->
-    <div class="max-w-md px-4 mx-auto md:pt-24 md:pb-16 sm:max-w-3xl sm:px-6 lg:max-w-7xl lg:px-8">
-        <div class="lg:grid lg:grid-cols-2 lg:items-center lg:gap-24">
-            <div class="mt-12 grid grid-cols-2 gap-0.5 md:grid-cols-3 lg:mt-0 lg:grid-cols-2">
-                {{ range .Site.Params.P3.Logos }}
-                <div class="flex justify-center col-span-1 px-8 py-8 bg-gray-50 dark:bg-gray-900/10">
-                    {{ if .image }}
-                    {{ $sponsor := resources.Get .image }}
-                    <img src="{{ $sponsor.RelPermalink }}" class="max-h-12 dark:invert" alt="{{ .alt }}" loading="lazy" />
-                    {{ else }}
-                    {{ $sponsor := resources.Get "images/global/sample-logo.svg" }}
-                    <img src="{{ $sponsor.RelPermalink }}" class="max-h-12 dark:invert" alt="{{ .alt }}" loading="lazy" />
-                    {{ end }}
-                </div>
-                {{ end }}
-            </div>
-            <div>
-                <h2 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-50 sm:text-4xl">
-                    {{ .Site.Params.P3.Heading }}
-                </h2>
-                {{ range .Site.Params.P3.Content }}
-                <p class="max-w-3xl mt-6 text-lg leading-7 text-gray-900 dark:text-white">
-                    {{ .text }}
-                </p>
-                {{ end }}
-                {{ range .Site.Params.P3.Links }}
-                <div class="my-6">
-                    <a href="{{ .url }}" class="text-base font-medium text-primary-400 dark:text-primary-100">
-                        {{ .text }}&nbsp&rarr;
-                    </a>
-                </div>
-                {{ end }}
-            </div>
-        </div>
-    </div>
+    
 
     <!-- Blog section -->
     <div class="relative px-1 pt-8 pb-4 bg-transparent lg:px-8 lg:pt-12 lg:mb-4 md:mt-12">
@@ -244,7 +244,7 @@
                     </svg>
                 </div>
                 <div class="relative">
-                    <div class="sm:text-center">
+                    <div class="sm:text-center" style='padding-bottom: 40px'>
                         <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
                             {{ .Site.Params.P5.Heading }}
                         </h2>
@@ -254,7 +254,10 @@
                         </p>
                         {{ end }}
                     </div>
-                    <form action="{{ .Site.Params.P5.Action }}" class="mt-12 sm:mx-auto sm:flex sm:max-w-lg">
+                    <div class="relative pl-4 -mr-40 sm:mx-auto sm:max-w-3xl sm:px-0 lg:h-full lg:max-w-none lg:pl-12" style='background-color: rgba(255, 255, 255, 0.6); border-radius: 15px; padding: 20px;'>
+                        {{ partial "join_form" . }}
+                    </div>
+                    {{/*  <form action="{{ .Site.Params.P5.Action }}" class="mt-12 sm:mx-auto sm:flex sm:max-w-lg">
                         <div class="flex-1 min-w-0">
                             <label for="cta-email" class="sr-only">{{ .Site.Params.P5.Label }}</label>
                             <input id="cta-email" type="email" class="block w-full px-5 py-3 text-base text-gray-900 placeholder-gray-500 border border-transparent rounded-md shadow-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-500" placeholder="{{ .Site.Params.P5.Placeholder }}">
@@ -264,7 +267,7 @@
                                 {{ .Site.Params.P5.Button }}
                             </button>
                         </div>
-                    </form>
+                    </form>  */}}
                 </div>
             </div>
         </div>
