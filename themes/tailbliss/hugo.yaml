@@ -59,7 +59,7 @@ params:
     image: "images/pages/dkc-oky.png"
     content:
       - text: "Melbourne Aviation Group is a co-operative flying group founded in 1963. MAG is wholly owned by the shareholder pilots through the issue of shares in equal quantity to each member."
-      - text: "The aim of the Group is to provide to the members access to aircraft owned by the Company free of the normal hiring restrictions imposed by Schools and private owners, and at the lowest cost consistent with viable operations."
+      - text: "The aim of the group is to provide to the members access to aircraft free of the normal hiring restrictions imposed by schools and private owners, and at the lowest cost consistent with viable operations."
   p2:
     heading: "How do I join?"
     image: "images/pages/hacktoberfest.jpg"
@@ -79,15 +79,6 @@ params:
         url: "#"
       - text: VH-OKY - 1999 Piper Archer III
         url: "#"
-    logos:
-      - identifier: a
-        image: "images/global/sample-logo.svg"
-        alt: "a"
-      - identifier: b
-      - identifier: c
-      - identifier: d
-      - identifier: e
-      - identifier: f
   p4:
     heading: "Latest news"
     content:
