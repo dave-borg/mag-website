@@ -62,10 +62,10 @@ params:
       - text: "The aim of the group is to provide to the members access to aircraft free of the normal hiring restrictions imposed by schools and private owners, and at the lowest cost consistent with viable operations."
   p2:
     heading: "How do I join?"
-    image: "images/pages/hacktoberfest.jpg"
+    image: "images/pages/Melbourne-Aviation-Group-LOGO-A.png"
     content:
       - text: "MAG is a non-profit Pty Ltd company that owns and operates two aircraft for the exclusive use of its shareholders. To join MAG you need to purchase one of the shares from an existing member."
-      - text: "If you'd like to learn more about joining MAG, enter your details here and we'll be in touch."
+      - text: "If you'd like to learn more about joining MAG, enter your details at the bottom of this page and we'll be in touch."
     links:
       - text: "Detailed Sale of Share policy can be found here"
         url: "/join/"
