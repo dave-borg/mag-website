@@ -38,7 +38,9 @@ jobs:
         SSH_PRIVATE_KEY: ${{ secrets.MAG_SSH_PRIVATE_KEY }}
 
     - name: Save private key
-      run: echo "${{ secrets.MAG_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.MAG_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
       shell: bash
   
     - name: Set permissions for private key
