@@ -37,13 +37,21 @@ jobs:
       env:
         SSH_PRIVATE_KEY: ${{ secrets.MAG_SSH_PRIVATE_KEY }}
 
+    - name: Save private key
+      run: echo "${{ secrets.MAG_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+      shell: bash
+  
+    - name: Set permissions for private key
+      run: chmod 600 ~/.ssh/id_rsa
+      shell: bash
+
     - name: Add server to known_hosts
       run: |
         mkdir -p ~/.ssh
         ssh-keyscan -H ${{ secrets.MAG_SSH_HOST }} >> ~/.ssh/known_hosts
   
     - name: Deploy to server
-      run: scp -P 2222 -r public/* ${{ secrets.MAG_SSH_USER }}@${{ secrets.MAG_SSH_HOST }}:/sandbox/
+      run: scp -i ~/.ssh/id_rsa -P 2222 -r public/* ${{ secrets.MAG_SSH_USER }}@${{ secrets.MAG_SSH_HOST }}:/sandbox/
       env:
         SSH_HOST: ${{ secrets.MAG_SSH_HOST }}
         SSH_USER: ${{ secrets.MAG_SSH_USER }}
