@@ -44,7 +44,7 @@ jobs:
         ssh-keyscan -H ${{ secrets.MAG_SSH_HOST }} >> ~/.ssh/known_hosts
   
     - name: Deploy to server
-      run: scp -r public/* ${{ secrets.MAG_SSH_USER }}@${{ secrets.MAG_SSH_HOST }}:/sandbox/
+      run: scp -p 2222 -r public/* ${{ secrets.MAG_SSH_USER }}@${{ secrets.MAG_SSH_HOST }}:/sandbox/
       env:
         SSH_HOST: ${{ secrets.MAG_SSH_HOST }}
         SSH_USER: ${{ secrets.MAG_SSH_USER }}
