@@ -7,8 +7,8 @@ enableGitInfo: true
 enableRobotsTXT: true
 canonifyURLs: true
 paginate: 9
-darkmode_js:
-  - assets/js/darkmode.js
+# darkmode_js:
+#   - assets/js/darkmode.js
 enableInlineShortcodes: true
 
 markup:
@@ -51,7 +51,7 @@ params:
   og_image: /images/tailbliss-cover.png
   moto: "Best aircraft at the lowest cost"
   description: "MAG is the most successful and longest running private flying group in Australia. MAG is run entirely not-for-profit operating out of Moorabbin Airport (YMMB), Melbourne’s largest GA airport."
-  disable_theme_toggle: true
+  disable_theme_toggle: false
   disable_stay_uptodate: false
 
   p1:
