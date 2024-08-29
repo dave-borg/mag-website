@@ -38,6 +38,11 @@ jobs:
       env:
         SSH_PRIVATE_KEY: ${{ secrets.MAG_SSH_PRIVATE_KEY }}
 
+    - name: Add server to known_hosts
+      run: |
+        mkdir -p ~/.ssh
+        ssh-keyscan -H ${{ secrets.MAG_SSH_HOST }} >> ~/.ssh/known_hosts
+  
     - name: Deploy to server
       run: scp -r public/* ${{ secrets.MAG_SSH_USER }}@${{ secrets.MAG_SSH_HOST }}:/sandbox/
       env:
