@@ -28,7 +28,7 @@ jobs:
         extended: true
 
     - name: Update baseURL for sandbox
-      run: sed -i 's|baseURL = .*$|baseURL = "https://sandbox.mag.com.au/"|' hugo.toml
+      run: sed -i 's|baseURL = .*$|baseURL = "https://www.mag.com.au/"|' hugo.toml
   
 
     - name: Build
@@ -57,7 +57,7 @@ jobs:
         ssh-keyscan -H ${{ secrets.MAG_SSH_HOST }} >> ~/.ssh/known_hosts
   
     - name: Deploy to server
-      run: scp -i ~/.ssh/id_rsa -P 2222 -r public/* ${{ secrets.MAG_SSH_USER }}@${{ secrets.MAG_SSH_HOST }}:~/public_html/sandbox/
+      run: scp -i ~/.ssh/id_rsa -P 2222 -r public/* ${{ secrets.MAG_SSH_USER }}@${{ secrets.MAG_SSH_HOST }}:~/public_html/
       env:
         SSH_HOST: ${{ secrets.MAG_SSH_HOST }}
         SSH_USER: ${{ secrets.MAG_SSH_USER }}
