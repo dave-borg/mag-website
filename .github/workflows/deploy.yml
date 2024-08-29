@@ -29,12 +29,16 @@ jobs:
 
     - name: Build
       run: hugo --minify
-    
-    - name: Deploy to server
+   
+    - name: Start SSH agent and add key
+      run: |
+        eval "$(ssh-agent -s)"
+        ssh-add - <<< "${{ secrets.MAG_SSH_PRIVATE_KEY }}"
       env:
         SSH_PRIVATE_KEY: ${{ secrets.MAG_SSH_PRIVATE_KEY }}
+
+    - name: Deploy to server
+      run: scp -r public/* ${{ secrets.MAG_SSH_USER }}@${{ secrets.MAG_SSH_HOST }}:/sandbox/
+      env:
         SSH_HOST: ${{ secrets.MAG_SSH_HOST }}
         SSH_USER: ${{ secrets.MAG_SSH_USER }}
-      run: |
-        ssh-add - <<< "${{ secrets.MAG_SSH_PRIVATE_KEY }}"
-        scp -r public/* $MAG_SSH_USER@$MAG_SSH_HOST:/sandbox/
