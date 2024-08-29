@@ -50,6 +50,9 @@ OKY is booked in to have a panel upgrade at the end of 2024. The new panel will 
 - GNX375 Transponder/GPS
 - GTR 205 COM
 
+You can see more details on the panel upgrade [here](http://localhost:1313/posts/oky-panel-upgrade-20240731/). 
+
+
 |                   |                  |
 |-------------------|------------------|
 | **Type**          | Piper Archer III |

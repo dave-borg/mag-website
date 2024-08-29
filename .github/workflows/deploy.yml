@@ -31,4 +31,4 @@ jobs:
         SSH_USER: ${{ secrets.MAG_SSH_USER }}
       run: |
         ssh-add - <<< "${{ secrets.MAG_SSH_PRIVATE_KEY }}"
-        scp -r public/* $MAG_SSH_USER@$MAG_SSH_HOST:/path/to/deployment/directory
+        scp -r public/* $MAG_SSH_USER@$MAG_SSH_HOST:/sandbox/

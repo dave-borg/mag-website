@@ -113,14 +113,14 @@ menu:
       name: Joining MAG
       url: /join/
       weight: 10
-    # - identifier: about
-    #   name: About
-    #   url: /about/
-    #   weight: 30
     - identifier: aircraft
       pre: dropdown
       name: Our Aircraft
       weight: 30
+    - identifier: news
+      name: News
+      url: /categories/news/
+      weight: 35
     - identifier: faq
       name: FAQ
       url: /faq/
@@ -160,11 +160,11 @@ menu:
   footer:
     - identifier: join
       name: Joining MAG
-      url: /about/
+      url: /join/
       weight: 10
-    - identifier: about
-      name: About
-      url: /about/
+    - identifier: news
+      name: News
+      url: /categories/news/
       weight: 20
     - identifier: privacy
       name: Privacy
