@@ -4,7 +4,7 @@ languageCode: en-us
 DefaultContentLanguage: en
 enableEmoji: true
 enableGitInfo: true
-enableRobotsTXT: true
+enableRobotsTXT: false
 canonifyURLs: true
 paginate: 9
 darkmode_js:
