@@ -4,7 +4,7 @@ date: 2024-08-30T14:33:36+10:00
 draft: false
 language: en
 description: Joining MAG
-featured_image: ../assets/images/featured/featured-img-placeholder.png
+featured_image: ../assets/images/global/logo.png
 sitemap:
   disable: true
 ---
