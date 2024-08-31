@@ -36,6 +36,7 @@ The ubiquitous PA28 is familiar to most pilots, serving as a solid trainer and g
 Our 1999 Archer III is about as good an example as you’ll find in Australia. Always maintained to IFR/NVFR standards.
 
 Featuring:
+
 - Aspen EFD1000 PFD
 - 2 x Garmin 430
 - S-TEC 50 Autopilot
@@ -44,14 +45,14 @@ Featuring:
 - Garmin GMA340 Audio Panel
 
 OKY is booked in to have a panel upgrade at the end of 2024. The new panel will include:
+
 - GI275 ADAHRS w/GMU11
 - GFC 500 Autopilot 3 servos Pitch/Roll/Pitch Trim inclusive of GMC 507, Yoke trim switch and Smart. Includes Glide button on the panel
 - GTN650XI Black GPS/NAV/COM incl of data card/databases
 - GNX375 Transponder/GPS
 - GTR 205 COM
 
-You can see more details on the panel upgrade [here](http://localhost:1313/posts/oky-panel-upgrade-20240731/). 
-
+Check more details on the [OKY panel upgrade]({{% ref "/posts/oky-panel-upgrade-20240731" %}}).
 
 |                   |                  |
 |-------------------|------------------|
