@@ -11,6 +11,8 @@ sitemap:
 
 We encourage transparency and fairness when pilots are considering buying or selling a share in MAG. This page provides the required details in order to hold informed negotiations.
 
+Should you have any questions simply email [membership@mag.com.au](mailto:membership@mag.com.au)
+
 ## Company Valuation
 
 It is entirely up to the buyer and seller to agree on the value of a share in MAG. But here are a few items worth considering:
