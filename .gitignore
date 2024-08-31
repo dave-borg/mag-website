@@ -39,3 +39,6 @@ Thumbs.db
 .LSOverride
 Icon?
 .DS_Store
+
+#pdf shortcode submodule
+/themes/hugo-embed-pdf-shortcode
