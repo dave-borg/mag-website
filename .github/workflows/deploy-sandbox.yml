@@ -75,3 +75,9 @@ jobs:
       env:
         SSH_HOST: ${{ secrets.MAG_SSH_HOST }}
         SSH_USER: ${{ secrets.MAG_SSH_USER }}
+
+    - name: Copy company details .htaccess
+      run: scp -i ~/.ssh/id_rsa -P 2222 themes/tailbliss/content/company-details/.htaccess ${{ secrets.MAG_SSH_USER }}@${{ secrets.MAG_SSH_HOST }}:~/public_html/sandbox/company-details/
+      env:
+        SSH_HOST: ${{ secrets.MAG_SSH_HOST }}
+        SSH_USER: ${{ secrets.MAG_SSH_USER }}
