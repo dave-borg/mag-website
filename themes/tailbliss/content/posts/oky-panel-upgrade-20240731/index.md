@@ -1,6 +1,6 @@
 ---
 title: "OKY Panel Upgrade"
-date: 2022-07-31T11:10:36+08:00
+date: 2024-08-01T11:10:36+08:00
 draft: false
 language: en
 featured_image: ../assets/images/posts/gtn650.jpg
