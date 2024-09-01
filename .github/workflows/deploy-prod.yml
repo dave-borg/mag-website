@@ -66,3 +66,21 @@ jobs:
       env:
         SSH_HOST: ${{ secrets.MAG_SSH_HOST }}
         SSH_USER: ${{ secrets.MAG_SSH_USER }}
+
+    - name: Copy .htpasswd to server
+      run: scp -i ~/.ssh/id_rsa -P 2222 themes/tailbliss/static/.htpasswd ${{ secrets.MAG_SSH_USER }}@${{ secrets.MAG_SSH_HOST }}:~/.htpasswds/public_html/
+      env:
+        SSH_HOST: ${{ secrets.MAG_SSH_HOST }}
+        SSH_USER: ${{ secrets.MAG_SSH_USER }}
+  
+    - name: Copy members only .htaccess
+      run: scp -i ~/.ssh/id_rsa -P 2222 themes/tailbliss/content/members-only/.htaccess ${{ secrets.MAG_SSH_USER }}@${{ secrets.MAG_SSH_HOST }}:~/public_html/members-only/
+      env:
+        SSH_HOST: ${{ secrets.MAG_SSH_HOST }}
+        SSH_USER: ${{ secrets.MAG_SSH_USER }}
+  
+    - name: Copy company details .htaccess
+      run: scp -i ~/.ssh/id_rsa -P 2222 themes/tailbliss/content/company-details/.htaccess ${{ secrets.MAG_SSH_USER }}@${{ secrets.MAG_SSH_HOST }}:~/public_html/company-details/
+      env:
+        SSH_HOST: ${{ secrets.MAG_SSH_HOST }}
+        SSH_USER: ${{ secrets.MAG_SSH_USER }}
