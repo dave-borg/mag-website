@@ -1,10 +1,10 @@
 # Password protect the members-only directory
 AuthType Basic
 AuthName "Restricted Area"
-AuthUserFile ../.htpasswd
+AuthUserFile /home/magcomau/.htpasswds/public_html/.htpasswd
 Require valid-user
 
-# Deny direct access to MAG-contact-sheet-20240901.pdf
-<Files "/MAG-contact-sheet-20240901.pdf">
+# Deny direct access to all PDF files
+<FilesMatch "\.pdf$">
   Require valid-user
-</Files>
+</FilesMatch>
