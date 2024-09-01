@@ -28,6 +28,12 @@ As at 1-Sep-2024
 ### Newsletters
 
 - [July 2024](Newsletter-202407.pdf)
+- [May 2024](Newsletter-202405.pdf)
+- [April 2024](Newsletter-202404.pdf)
+- [October 2023](Newsletter-202310.pdf)
+- [September 2023](Newsletter-202309.pdf)
+- [June 2023](Newsletter-202306.pdf)
+- [March 2023](Newsletter-202303.pdf)
 
 ## Company Documents
 
