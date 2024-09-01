@@ -5,6 +5,7 @@ draft: false
 language: en
 description: Reference material for MAG members
 featured_image: ../assets/images/global/logo.png
+noindex: true
 sitemap:
   disable: true
 ---

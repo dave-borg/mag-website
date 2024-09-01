@@ -8,6 +8,9 @@
 <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#5bbad5">
 <meta name="msapplication-TileColor" content="#da532c">
 <meta name="theme-color" content="#ffffff">
+{{ if .Params.noindex }}
+<meta name="robots" content="noindex" /> 
+{{ end }}
 {{ partial "meta" . }}
 <script>
     // On page load or when changing themes, best to add inline in `head` to avoid FOUC

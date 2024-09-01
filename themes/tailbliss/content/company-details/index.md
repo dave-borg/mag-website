@@ -5,6 +5,7 @@ draft: false
 language: en
 description: Joining MAG
 featured_image: ../assets/images/global/logo.png
+noindex: true
 sitemap:
   disable: true
 ---
