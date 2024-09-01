@@ -1,10 +1,10 @@
-# Password protect the members-only directory
+# Password protect the company details directory
 AuthType Basic
 AuthName "Restricted Area"
 AuthUserFile /home/magcomau/.htpasswds/public_html/.htpasswd
-Require valid-user
+Require user magptyltd
 
 # Deny direct access to all PDF files
 <FilesMatch "\.pdf$">
-  Require valid-user
+  Require user magptyltd
 </FilesMatch>
