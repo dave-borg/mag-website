@@ -44,6 +44,9 @@ markup:
       hardWraps: false
       unsafe: true
       xhtml: false
+    tableOfContents:
+      startLevel: 2
+      endLevel: 3
 
 params:
   author: Melbourne Aviation Group

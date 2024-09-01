@@ -1,8 +1,8 @@
-name: Deploy to JustHost Prod
+name: Deploy to JustHost Sandbox
 
 on:
   push:
-    branches:
+    branches-ignore:
       - main
 
 jobs:
@@ -28,7 +28,7 @@ jobs:
         extended: true
 
     - name: Update baseURL for sandbox
-      run: sed -i 's|baseURL = .*$|baseURL = "https://www.mag.com.au/"|' hugo.toml
+      run: sed -i 's|baseURL = .*$|baseURL = "https://sandbox.mag.com.au/"|' hugo.toml
 
     - name: Initialize and update submodules
       run: git submodule update --init --recursive
@@ -59,7 +59,7 @@ jobs:
         ssh-keyscan -H ${{ secrets.MAG_SSH_HOST }} >> ~/.ssh/known_hosts
 
     - name: Deploy to server
-      run: scp -i ~/.ssh/id_rsa -P 2222 -r public/* ${{ secrets.MAG_SSH_USER }}@${{ secrets.MAG_SSH_HOST }}:~/public_html/
+      run: scp -i ~/.ssh/id_rsa -P 2222 -r public/* ${{ secrets.MAG_SSH_USER }}@${{ secrets.MAG_SSH_HOST }}:~/public_html/sandbox/
       env:
         SSH_HOST: ${{ secrets.MAG_SSH_HOST }}
         SSH_USER: ${{ secrets.MAG_SSH_USER }}
