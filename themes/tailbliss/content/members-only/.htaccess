@@ -5,6 +5,6 @@ AuthUserFile ../.htpasswd
 Require valid-user
 
 # Deny direct access to MAG-contact-sheet-20240901.pdf
-<Files "MAG-contact-sheet-20240901.pdf">
+<Files "/MAG-contact-sheet-20240901.pdf">
   Require valid-user
 </Files>

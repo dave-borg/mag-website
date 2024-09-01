@@ -60,7 +60,7 @@ RewriteCond %{HTTP_REFERER} !^https://www.mag.com.au/.*$      [NC]
 RewriteCond %{HTTP_REFERER} !^https://www.mag.com.au$      [NC]
 RewriteCond %{HTTP_REFERER} !^https://www.sandbox.mag.com.au/.*$      [NC]
 RewriteCond %{HTTP_REFERER} !^https://www.sandbox.mag.com.au$      [NC]
-RewriteRule .*\.(jpg|jpeg|gif|png|bmp)$ - [F,NC]
+RewriteRule .*\.(jpg|jpeg|gif|png|bmp|pdf)$ - [F,NC]
 
 
 # php -- BEGIN cPanel-generated handler, do not edit
