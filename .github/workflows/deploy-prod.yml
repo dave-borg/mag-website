@@ -1,0 +1,65 @@
+name: Deploy to JustHost Prod
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Setup Hugo
+      uses: peaceiris/actions-hugo@v3
+      with:
+        hugo-version: '0.133.1'
+        extended: true
+
+    - name: Update baseURL for sandbox
+      run: sed -i 's|baseURL = .*$|baseURL = "https://www.mag.com.au/"|' hugo.toml
+
+    - name: Initialize and update submodules
+      run: git submodule update --init --recursive
+
+    - name: Build
+      run: hugo --minify
+
+    - name: Start SSH agent and add key
+      run: |
+        eval "$(ssh-agent -s)"
+        ssh-add - <<< "${{ secrets.MAG_SSH_PRIVATE_KEY }}"
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.MAG_SSH_PRIVATE_KEY }}
+
+    - name: Save private key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.MAG_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+      shell: bash
+
+    - name: Set permissions for private key
+      run: chmod 600 ~/.ssh/id_rsa
+      shell: bash
+
+    - name: Add server to known_hosts
+      run: |
+        mkdir -p ~/.ssh
+        ssh-keyscan -H ${{ secrets.MAG_SSH_HOST }} >> ~/.ssh/known_hosts
+
+    - name: Deploy to server
+      run: scp -i ~/.ssh/id_rsa -P 2222 -r public/* ${{ secrets.MAG_SSH_USER }}@${{ secrets.MAG_SSH_HOST }}:~/public_html/
+      env:
+        SSH_HOST: ${{ secrets.MAG_SSH_HOST }}
+        SSH_USER: ${{ secrets.MAG_SSH_USER }}
