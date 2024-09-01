@@ -32,7 +32,7 @@ DirectoryIndex index.html
 <Directory "/members-only/">
   AuthType Basic
   AuthName "Restricted Area"
-  AuthUserFile /.htpasswd
+  AuthUserFile .htpasswd
   Require valid-user
 </Directory>
 
@@ -40,7 +40,7 @@ DirectoryIndex index.html
 <Files "/members-only/MAG-contact-sheet-20240901.pdf">
   AuthType Basic
   AuthName "Restricted Area"
-  AuthUserFile /.htpasswd
+  AuthUserFile .htpasswd
   Require valid-user
 </Files>
 
