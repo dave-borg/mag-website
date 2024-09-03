@@ -6,6 +6,10 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ /$1.html [L,QSA]
 
+# Redirect /?page_id=837 to /privacy-policy
+RewriteCond %{QUERY_STRING} ^page_id=837$
+RewriteRule ^$ /privacy-policy? [R=301,L]
+
 # Set the default index file
 DirectoryIndex index.html
 
