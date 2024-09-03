@@ -7,7 +7,7 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ /$1.html [L,QSA]
 
 # Redirect /?page_id=837 to /privacy-policy
-RewriteCond %{QUERY_STRING} ^page_id=837$
+RewriteCond %{QUERY_STRING} (^|&)page_id=837(&|$)
 RewriteRule ^$ /privacy-policy? [R=301,L]
 
 # Set the default index file
@@ -31,22 +31,6 @@ DirectoryIndex index.html
   Header set X-Frame-Options "DENY"
   Header set X-XSS-Protection "1; mode=block"
 </IfModule>
-
-# Password protect /members-only directory
-<Directory "/members-only/">
-  AuthType Basic
-  AuthName "Restricted Area"
-  AuthUserFile .htpasswd
-  Require valid-user
-</Directory>
-
-# Password protect /members-only/MAG-contact-sheet-20240901.pdf
-<Files "/members-only/MAG-contact-sheet-20240901.pdf">
-  AuthType Basic
-  AuthName "Restricted Area"
-  AuthUserFile .htpasswd
-  Require valid-user
-</Files>
 
 RewriteCond %{HTTP_REFERER} !^http://mag.com.au/.*$      [NC]
 RewriteCond %{HTTP_REFERER} !^http://mag.com.au$      [NC]
