@@ -31,7 +31,10 @@ jobs:
       run: sed -i 's|baseURL = .*$|baseURL = "https://sandbox.mag.com.au/"|' hugo.toml
 
     - name: Write secret to .htpasswd
-      run: echo "${{ secrets.MAG_HTPASSWD }}" > themes/tailbliss/static/.htpasswd
+      run: |
+        echo '${{ secrets.MAG_HTPASSWD_MEMBER_BASE64 }}' | base64 --decode > themes/tailbliss/static/.htpasswd
+        printf '\n' >> themes/tailbliss/static/.htpasswd
+        echo '${{ secrets.MAG_HTPASSWD_COMPANY_BASE64 }}' | base64 --decode >> themes/tailbliss/static/.htpasswd
 
     - name: Initialize and update submodules
       run: git submodule update --init --recursive
