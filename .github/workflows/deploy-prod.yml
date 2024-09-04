@@ -35,9 +35,9 @@ jobs:
 
     - name: Write secret to .htpasswd
       run: |
-        printf '${{ secrets.MAG_HTPASSWD_MEMBER_BASE64 }}' | base64 --decode > themes/tailbliss/static/.htpasswd
-        echo "\n" | >> themes/tailbliss/static/.htpasswd
-        printf '${{ secrets.MAG_HTPASSWD_COMPANY_BASE64 }}' | base64 --decode >> themes/tailbliss/static/.htpasswd
+        printf '%s' "${{ secrets.MAG_HTPASSWD_MEMBER_BASE64 }}" | base64 --decode > themes/tailbliss/static/.htpasswd
+        printf '\n' >> themes/tailbliss/static/.htpasswd
+        printf '%s' "${{ secrets.MAG_HTPASSWD_COMPANY_BASE64 }}" | base64 --decode >> themes/tailbliss/static/.htpasswd
 
     - name: Initialize and update submodules
       run: git submodule update --init --recursive
