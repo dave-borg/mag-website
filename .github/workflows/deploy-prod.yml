@@ -33,6 +33,9 @@ jobs:
     - name: Update baseURL for sandbox
       run: sed -i 's|baseURL = .*$|baseURL = "https://www.mag.com.au/"|' hugo.toml
 
+    - name: Write secret to .htpasswd
+      run: echo "${{ secrets.MAG_HTPASSWD }}" > themes/tailbliss/static/.htpasswd
+
     - name: Initialize and update submodules
       run: git submodule update --init --recursive
 
