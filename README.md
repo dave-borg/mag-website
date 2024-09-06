@@ -1,20 +1,24 @@
 # MAG Website
 
-This repository contains the source code for the [MAG website](https://www.mag.com.au/). The website is built using [Hugo](https://gohugo.io/), a fast and flexible static site generator. The deployment process is automated using GitHub Actions, which deploys the site to our web server.
+This repository contains the source code for the MAG website, which can be accessed at [https://www.mag.com.au/](https://www.mag.com.au/).
 
-## Table of Contents
+## Description
 
-- [Installation](#installation)
-- [Usage](#usage)
-- [Deployment](#deployment)
-- [Contributing](#contributing)
-- [License](#license)
+The MAG website is built using Hugo, a static site generator. It leverages GitHub Actions for automated deployment to our web server.
 
 ## Installation
 
-To set up the project locally, follow these steps:
+To set up the MAG website locally, follow these steps:
 
-1. **Clone the repository**:
-   ```sh
-   git clone https://github.com/your-username/mag-website.git
-   cd mag-website
+1. Clone this repository: `git clone https://github.com/your-username/mag-website.git`
+2. Install Hugo: [https://gohugo.io/getting-started/installing/](https://gohugo.io/getting-started/installing/)
+3. Navigate to the project directory: `cd mag-website`
+4. Start the local development server: `hugo server`
+
+## Deployment
+
+The MAG website is automatically deployed to our web server using GitHub Actions. Whenever changes are pushed to the `main` branch, the deployment workflow is triggered, ensuring that the latest version of the website is always live.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
