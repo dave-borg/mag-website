@@ -48,7 +48,7 @@ jobs:
       run: cp -r themes/mag-website-private/content/company-details themes/tailbliss/content/
     
     - name: Copy contact list into assets
-      run: cp themes/mag-website-private/assets/members-only/*.csv themes/tailbliss/assets/members-only/
+      run: cp -r themes/mag-website-private/assets/members-only themes/tailbliss/assets/
 
     - name: Build
       run: hugo --minify
