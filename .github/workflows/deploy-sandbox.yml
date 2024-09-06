@@ -16,7 +16,7 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '16'
+        node-version: '18'
 
     - name: Install dependencies
       run: npm install
@@ -38,6 +38,15 @@ jobs:
 
     - name: Initialize and update submodules
       run: git submodule update --init --recursive
+
+    - name: Copy members-only content from submodule
+      run: cp -r themes/mag-website-private/content/members-only/* themes/tailbliss/content/members-only/
+    
+    - name: Copy company-details content from submodule
+      run: cp -r themes/mag-website-private/content/company-details/* themes/tailbliss/content/company-details/
+    
+    - name: Copy contact list into assets
+      run: cp -r themes/mag-website-private/assets/members-only/* themes/tailbliss/assets/members-only/
 
     - name: Build
       run: hugo --minify
