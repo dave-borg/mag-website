@@ -37,11 +37,9 @@ jobs:
         echo '${{ secrets.MAG_HTPASSWD_COMPANY_BASE64 }}' | base64 --decode >> themes/tailbliss/static/.htpasswd
 
     - name: Initialize and update submodules
-      run: git submodule update --init --recursive
-      env:
-        GIT_ASKPASS: /bin/echo
-        GIT_USERNAME: ${{ secrets.GH_PAT_MAG_WEBSITE_PRIVATE }}
-        GIT_PASSWORD: ${{ secrets.GH_PAT_MAG_WEBSITE_PRIVATE }}
+      run: |
+        git config --global url."https://${{ secrets.GH_PAT_PRIVATE }}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
+        git submodule update --init --recursive
 
     - name: Copy members-only content from submodule
       run: cp -r themes/mag-website-private/content/members-only/* themes/tailbliss/content/members-only/
