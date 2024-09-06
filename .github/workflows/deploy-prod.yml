@@ -1,4 +1,4 @@
-name: Deploy to JustHost Prod
+# name: Deploy to JustHost Prod
 
 on:
   push:
@@ -8,91 +8,92 @@ on:
     branches:
       - main
 
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+#     steps:
+#     - name: Checkout code
+#       uses: actions/checkout@v2
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '16'
+#     - name: Set up Node.js
+#       uses: actions/setup-node@v2
+#       with:
+#         node-version: '16'
 
-    - name: Install dependencies
-      run: npm install
+#     - name: Install dependencies
+#       run: npm install
 
-    - name: Setup Hugo
-      uses: peaceiris/actions-hugo@v3
-      with:
-        hugo-version: '0.133.1'
-        extended: true
+#     - name: Setup Hugo
+#       uses: peaceiris/actions-hugo@v3
+#       with:
+#         hugo-version: '0.133.1'
+#         extended: true
 
-    - name: Update baseURL for sandbox
-      run: sed -i 's|baseURL = .*$|baseURL = "https://www.mag.com.au/"|' hugo.toml
+#     - name: Update baseURL for sandbox
+#       run: sed -i 's|baseURL = .*$|baseURL = "https://www.mag.com.au/"|' hugo.toml
 
-    - name: Write secret to .htpasswd
-      run: |
-        echo '${{ secrets.MAG_HTPASSWD_MEMBER_BASE64 }}' | base64 --decode > themes/tailbliss/static/.htpasswd
-        printf '\n' >> themes/tailbliss/static/.htpasswd
-        echo '${{ secrets.MAG_HTPASSWD_COMPANY_BASE64 }}' | base64 --decode >> themes/tailbliss/static/.htpasswd
+#     - name: Write secret to .htpasswd
+#       run: |
+#         echo '${{ secrets.MAG_HTPASSWD_MEMBER_BASE64 }}' | base64 --decode > themes/tailbliss/static/.htpasswd
+#         printf '\n' >> themes/tailbliss/static/.htpasswd
+#         echo '${{ secrets.MAG_HTPASSWD_COMPANY_BASE64 }}' | base64 --decode >> themes/tailbliss/static/.htpasswd
 
-    - name: Initialize and update submodules
-      run: git submodule update --init --recursive
+#     - name: Initialize and update submodules
+#       run: git submodule update --init --recursive
 
-    - name: Build
-      run: hugo --minify
+#     - name: Build
+#       run: hugo --minify
 
-    - name: Start SSH agent and add key
-      run: |
-        eval "$(ssh-agent -s)"
-        ssh-add - <<< "${{ secrets.MAG_SSH_PRIVATE_KEY }}"
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.MAG_SSH_PRIVATE_KEY }}
+#     - name: Start SSH agent and add key
+#       run: |
+#         eval "$(ssh-agent -s)"
+#         ssh-add - <<< "${{ secrets.MAG_SSH_PRIVATE_KEY }}"
+#       env:
+#         SSH_PRIVATE_KEY: ${{ secrets.MAG_SSH_PRIVATE_KEY }}
 
-    - name: Save private key
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.MAG_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-      shell: bash
+#     - name: Save private key
+#       run: |
+#         mkdir -p ~/.ssh
+#         echo "${{ secrets.MAG_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+#       shell: bash
 
-    - name: Set permissions for private key
-      run: chmod 600 ~/.ssh/id_rsa
-      shell: bash
+#     - name: Set permissions for private key
+#       run: chmod 600 ~/.ssh/id_rsa
+#       shell: bash
 
-    - name: Add server to known_hosts
-      run: |
-        mkdir -p ~/.ssh
-        ssh-keyscan -H ${{ secrets.MAG_SSH_HOST }} >> ~/.ssh/known_hosts
+#     - name: Add server to known_hosts
+#       run: |
+#         mkdir -p ~/.ssh
+#         ssh-keyscan -H ${{ secrets.MAG_SSH_HOST }} >> ~/.ssh/known_hosts
 
-    - name: Deploy to server
-      run: scp -i ~/.ssh/id_rsa -P 2222 -r public/* ${{ secrets.MAG_SSH_USER }}@${{ secrets.MAG_SSH_HOST }}:~/public_html/
-      env:
-        SSH_HOST: ${{ secrets.MAG_SSH_HOST }}
-        SSH_USER: ${{ secrets.MAG_SSH_USER }}
+#     - name: Deploy to server
+#       run: scp -i ~/.ssh/id_rsa -P 2222 -r public/* ${{ secrets.MAG_SSH_USER }}@${{ secrets.MAG_SSH_HOST }}:~/public_html/
+#       env:
+#         SSH_HOST: ${{ secrets.MAG_SSH_HOST }}
+#         SSH_USER: ${{ secrets.MAG_SSH_USER }}
 
-    - name: Copy .htpasswd to server
-      run: scp -i ~/.ssh/id_rsa -P 2222 themes/tailbliss/static/.htpasswd ${{ secrets.MAG_SSH_USER }}@${{ secrets.MAG_SSH_HOST }}:~/.htpasswds/public_html/
-      env:
-        SSH_HOST: ${{ secrets.MAG_SSH_HOST }}
-        SSH_USER: ${{ secrets.MAG_SSH_USER }}
+#     - name: Copy .htpasswd to server
+#       run: scp -i ~/.ssh/id_rsa -P 2222 themes/tailbliss/static/.htpasswd ${{ secrets.MAG_SSH_USER }}@${{ secrets.MAG_SSH_HOST }}:~/.htpasswds/public_html/
+#       env:
+#         SSH_HOST: ${{ secrets.MAG_SSH_HOST }}
+#         SSH_USER: ${{ secrets.MAG_SSH_USER }}
 
-    - name: Copy site .htaccess
-      run: scp -i ~/.ssh/id_rsa -P 2222 themes/tailbliss/static/.htaccess ${{ secrets.MAG_SSH_USER }}@${{ secrets.MAG_SSH_HOST }}:~/public_html/
-      env:
-        SSH_HOST: ${{ secrets.MAG_SSH_HOST }}
-        SSH_USER: ${{ secrets.MAG_SSH_USER }}
+#     - name: Copy site .htaccess
+#       run: scp -i ~/.ssh/id_rsa -P 2222 themes/tailbliss/static/.htaccess ${{ secrets.MAG_SSH_USER }}@${{ secrets.MAG_SSH_HOST }}:~/public_html/
+#       env:
+#         SSH_HOST: ${{ secrets.MAG_SSH_HOST }}
+#         SSH_USER: ${{ secrets.MAG_SSH_USER }}
 
-    - name: Copy members only .htaccess
-      run: scp -i ~/.ssh/id_rsa -P 2222 themes/tailbliss/content/members-only/.htaccess ${{ secrets.MAG_SSH_USER }}@${{ secrets.MAG_SSH_HOST }}:~/public_html/members-only/
-      env:
-        SSH_HOST: ${{ secrets.MAG_SSH_HOST }}
-        SSH_USER: ${{ secrets.MAG_SSH_USER }}
+#     - name: Copy members only .htaccess
+#       run: scp -i ~/.ssh/id_rsa -P 2222 themes/tailbliss/content/members-only/.htaccess ${{ secrets.MAG_SSH_USER }}@${{ secrets.MAG_SSH_HOST }}:~/public_html/members-only/
+#       env:
+#         SSH_HOST: ${{ secrets.MAG_SSH_HOST }}
+#         SSH_USER: ${{ secrets.MAG_SSH_USER }}
   
-    - name: Copy company details .htaccess
-      run: scp -i ~/.ssh/id_rsa -P 2222 themes/tailbliss/content/company-details/.htaccess ${{ secrets.MAG_SSH_USER }}@${{ secrets.MAG_SSH_HOST }}:~/public_html/company-details/
-      env:
-        SSH_HOST: ${{ secrets.MAG_SSH_HOST }}
-        SSH_USER: ${{ secrets.MAG_SSH_USER }}
+#     - name: Copy company details .htaccess
+#       run: scp -i ~/.ssh/id_rsa -P 2222 themes/tailbliss/content/company-details/.htaccess ${{ secrets.MAG_SSH_USER }}@${{ secrets.MAG_SSH_HOST }}:~/public_html/company-details/
+#       env:
+#         SSH_HOST: ${{ secrets.MAG_SSH_HOST }}
+#         SSH_USER: ${{ secrets.MAG_SSH_USER }}
