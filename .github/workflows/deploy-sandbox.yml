@@ -42,13 +42,13 @@ jobs:
         git submodule update --init --recursive
 
     - name: Copy members-only content from submodule
-      run: cp -r themes/mag-website-private/content/members-only/* themes/tailbliss/content/members-only/
+      run: cp -r themes/mag-website-private/content/members-only themes/tailbliss/content/
     
     - name: Copy company-details content from submodule
-      run: cp -r themes/mag-website-private/content/company-details/* themes/tailbliss/content/company-details/
+      run: cp -r themes/mag-website-private/content/company-details themes/tailbliss/content/
     
     - name: Copy contact list into assets
-      run: cp -r themes/mag-website-private/assets/members-only/* themes/tailbliss/assets/members-only/
+      run: cp themes/mag-website-private/assets/members-only/*.csv themes/tailbliss/assets/members-only/
 
     - name: Build
       run: hugo --minify
