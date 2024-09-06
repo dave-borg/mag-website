@@ -40,8 +40,8 @@ jobs:
       run: git submodule update --init --recursive
       env:
         GIT_ASKPASS: /bin/echo
-        GIT_USERNAME: ${{ secrets.GH_PAT_PRIVATE }}
-        GIT_PASSWORD: ${{ secrets.GH_PAT_PRIVATE }}
+        GIT_USERNAME: ${{ secrets.GH_PAT_MAG_WEBSITE_PRIVATE }}
+        GIT_PASSWORD: ${{ secrets.GH_PAT_MAG_WEBSITE_PRIVATE }}
 
     - name: Copy members-only content from submodule
       run: cp -r themes/mag-website-private/content/members-only/* themes/tailbliss/content/members-only/
