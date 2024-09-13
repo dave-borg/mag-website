@@ -27,7 +27,7 @@ images:
 
 ~~We have scheduled a wash and polish at 8:30am on **Sat 14 September 2024**.~~
 
-Due to weather we've had to move the wash and polish to **Sat 14th October 2024**. 
+Due to weather we've had to move the wash and polish to **Sat 5th October 2024**. 
 
 Please make an effort to give us a hand. Metal Mistresses in need of attention.
 
