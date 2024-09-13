@@ -16,7 +16,7 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '16'
+        node-version: '18'
 
     - name: Install dependencies
       run: npm install
@@ -37,7 +37,18 @@ jobs:
         echo '${{ secrets.MAG_HTPASSWD_COMPANY_BASE64 }}' | base64 --decode >> themes/tailbliss/static/.htpasswd
 
     - name: Initialize and update submodules
-      run: git submodule update --init --recursive
+      run: |
+        git config --global url."https://${{ secrets.GH_PAT_PRIVATE }}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
+        git submodule update --init --recursive
+
+    - name: Copy members-only content from submodule
+      run: cp -r themes/mag-website-private/content/members-only themes/tailbliss/content/
+    
+    - name: Copy company-details content from submodule
+      run: cp -r themes/mag-website-private/content/company-details themes/tailbliss/content/
+    
+    - name: Copy contact list into assets
+      run: cp -r themes/mag-website-private/assets/members-only themes/tailbliss/assets/
 
     - name: Build
       run: hugo --minify

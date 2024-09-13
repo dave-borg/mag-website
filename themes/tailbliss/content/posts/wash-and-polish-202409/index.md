@@ -1,5 +1,5 @@
 ---
-title: "Wash and Polish"
+title: "[Revised] Wash and Polish"
 date: 2024-05-11T11:10:36+08:00
 expires: 2024-09-15T01:10:36+08:00
 draft: false
@@ -26,7 +26,9 @@ images:
 
 ## September Wash and Polish
 
-We have scheduled a wash and polish at 8:30am on **Sat 14 September 2024**.
+~~We have scheduled a wash and polish at 8:30am on **Sat 14 September 2024**.~~
+
+Due to weather we've had to move the wash and polish to **Sat 14th October 2024**. 
 
 Please make an effort to give us a hand. Metal Mistresses in need of attention.
 
