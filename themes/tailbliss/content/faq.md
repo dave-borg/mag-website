@@ -8,7 +8,7 @@ description: FAQ
 
 ## What am I buying a share in?
 
-When you purchase a share, you are buying an equal share in Melbourne Aviation Group Pty Ltd (ABN 62 004 589 557) a company that owns two aircraft. You do not buy a share of a specific aircraft.
+When you purchase a share, you are buying an equal share in Melbourne Aviation Group Pty Ltd (ABN 62 004 589 557) a company that owns two aircraft. You do not buy a share of a specific aircraft. There are 38 equal shareholdings in Melbourne Aviation Group Pty Ltd. 
 
 ## How easy is it to book the aircraft?
 
@@ -16,17 +16,19 @@ Availability is generally good. We have an online booking system where you can r
 
 ## Can I use the aircraft overnight or for longer trips?
 
-Absolutely! Our members have taken the aircraft all over Australia. You can use the aircraft for flying adventures, and it offers more flexibility compared to hiring from a flight school. There are no minimum hour requirements.
+Absolutely! Our members have taken the aircraft all over Australia. You can use the aircraft for flying adventures, and it offers more flexibility compared to hiring from a flight school. There are no minimum flight hour requirements for an aircraft booking.
 
 ## Which aircraft is more popular?
 
-The 182 is the more popular aircraft due to its superior range, load capacity, and speed.
+The 182 is the more popular aircraft due to its superior range, load capacity and speed.
 
 ## What is the price of a share?
 
-The price is negotiated between the buyer and the seller. Members are not automatically informed of sale prices. While the latest price cannot be disclosed, a rough estimate would be between $10,000 and $20,000.
+The price is negotiated between the buyer and the seller. When you indicate your interest in purchasing a share you will be provided a copy of the latest annual financials for you to assess the value of the share.
 
-When you enquire about purchasing a share you will be provided a copy of the latest annual financials for you to assess the value of the share.
+You'll see the current balance sheet the value of the assets (the two aircraft, plus any reserves or upgrade funds) less any liabilities (MAG doesn't carry any debt or finance, liabilities tend to be items such as trade debtors and GST).
+
+As there are 38 members the intrinsic value of a share is the current value on the balance sheet divided by 38.
 
 ## What are the ongoing costs involved?
 
@@ -44,7 +46,7 @@ MAG has a recency requirement for all pilots that requires a regular check ride.
 
 While there are minimum flying experience requirements in order to operate as PIC of MAG aircraft, there is no minimum hour requirement to join as a member.
 
-## Can I enquire about shares currently for sale?
+## How do I enquire about shares currently for sale?
 
 If you are interested in shares currently available for sale contact [membership@mag.com.au](mailto:membership@mag.com.au) and your details will be forwarded to all group members. Members interested in selling their share will contact you directly to negotiate a price.
 
@@ -52,6 +54,8 @@ Check the page [Joining MAG](/join/) for more details.
 
 ## What is the MAG Privacy Policy?
 
-In short, MAG will never sell or provide your details to anyone. We are a non-profit organisation and have no interest in monetising mailing lists. We only collect your details in order to provide membership information and group updates.
-
 You can find our [Privacy Policy here](/privacy-policy).
+
+### TLDR; 
+
+In short, MAG will never sell or provide your details to anyone. We are a non-profit organisation and have no interest in monetising mailing lists. We only collect your details in order to provide membership information and group updates.
