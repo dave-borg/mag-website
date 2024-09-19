@@ -54,3 +54,6 @@ RewriteRule .*\.(jpg|jpeg|gif|png|bmp|pdf)$ - [F,NC]
 # php -- BEGIN cPanel-generated handler, do not edit
 # This domain inherits the “PHP” package.
 # php -- END cPanel-generated handler, do not edit
+
+# Redirect any URL ending in .php to a 404 error
+RewriteRule \.php$ - [R=404,L]
