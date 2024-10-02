@@ -44,7 +44,11 @@ jobs:
       run: |
         git config --global url."https://${{ secrets.GH_PAT_PRIVATE }}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
         git submodule update --init --recursive
-        git submodule foreach git pull origin main
+        cd themes/mag-website-private
+        git fetch origin
+        git checkout $(git rev-parse --abbrev-ref origin/HEAD | sed "s@^origin/@@")
+        git pull origin $(git rev-parse --abbrev-ref origin/HEAD | sed "s@^origin/@@")
+        cd ../..
   
     - name: Copy members-only content from submodule
       run: cp -r themes/mag-website-private/content/members-only themes/tailbliss/content/
