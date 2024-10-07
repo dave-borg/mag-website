@@ -59,7 +59,7 @@ Check more details on the [OKY panel upgrade]({{% ref "/posts/oky-panel-upgrade-
 | **Type**          | Piper Archer III |
 | **Year**          | 1999              |
 | **Useful Load**   | 396 kgs           |
-| **$/hr Wet**      | $235 airswitch    |
+| **$/hr Wet**      | $235 tacho      |
 | **Cruise Speed**  | 120 kts           |
 
 - [VH-OKY Pilot's Operating Handbook](VH-OKY-Pilots-Operating-Handbook.pdf)
