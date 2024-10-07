@@ -63,6 +63,7 @@ Check more details on the [OKY panel upgrade]({{% ref "/posts/oky-panel-upgrade-
 | **Cruise Speed**  | 120 kts           |
 
 - [VH-OKY Pilot's Operating Handbook](VH-OKY-Pilots-Operating-Handbook.pdf)
+- [Aspen Evolution EFD1000 Pilot's Guide](Aspen-Evolution-EFD1000-Pilots-Guide.pdf)
 - [Garmin GI 275 Pilot's Guide](GI275-PILOT.pdf)
 - [VH-OKY Checklist](IFR-Checklist-PA28-181-Arher-III-VH-OKY.pdf)
 
