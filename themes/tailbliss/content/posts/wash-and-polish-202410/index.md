@@ -31,7 +31,7 @@ images:
     alt: "The tall Jan taking care of the top of the 182 wings"
   - src: "IMG_4763.jpg"
     thumb: "IMG_4763.jpg"
-    alt: "Cameron leaning in on his first MAG event"
+    alt: "Pat leaning in on his first MAG event"
   - src: "IMG_4769.jpg"
     thumb: "IMG_4769.jpg"
     alt: "Mark handing out the polish for DKC"
