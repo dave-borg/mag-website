@@ -1,6 +1,7 @@
 ---
 title: "[Revised] Wash and Polish"
 date: 2024-09-13T11:10:36+08:00
+expiryDate: 2024-10-8T00:00:00+11:00
 draft: false
 language: en
 featured_image: ../assets/images/global/calendar-icon.png
