@@ -3,11 +3,13 @@ title: "Oct. Wash & Polish"
 date: 2024-10-08T11:10:36+08:00
 draft: false
 language: en
-featured_image: ../assets/images/global/calendar-icon.png
+featured_image: posts/wash-and-polish-202410/IMG_4785.jpg
 summary: Great turnout for the October wash & polish. Wash great 
 author: Dave Borgeest
 categories: News
 tags: News
+image_width: "600px"
+image_height: "400px"
 images:
   - src: "IMG_4006.jpeg"
     thumb: "IMG_4006.jpeg"

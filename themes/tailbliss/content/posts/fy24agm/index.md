@@ -3,7 +3,7 @@ title: "2024 AGM"
 date: 2024-08-01T11:10:36+08:00
 draft: false
 language: en
-featured_image: ../assets/images/global/calendar-icon.png
+# featured_image: ../assets/images/global/calendar-icon.png
 summary: The Annual General Meeting date has been set. Pencil the date in...
 authorimage: ../assets/images/global/author.webp
 categories: News

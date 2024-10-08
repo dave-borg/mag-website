@@ -4,7 +4,7 @@ date: 2024-09-13T11:10:36+08:00
 expiryDate: 2024-10-8T00:00:00+11:00
 draft: false
 language: en
-featured_image: ../assets/images/global/calendar-icon.png
+# featured_image: ../assets/images/global/calendar-icon.png
 summary: The weather was a little bleak on the 11 May when the last wash and polish was held which probably explains the relatively low numbers attending. Thanks to those who did attend and for their efforts in cleaning up the aircraft.
 author: Bill Holmes
 categories: News
