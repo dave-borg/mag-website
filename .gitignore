@@ -42,3 +42,5 @@ Icon?
 
 #pdf shortcode submodule
 /themes/hugo-embed-pdf-shortcode
+
+/selenium-tests/target
