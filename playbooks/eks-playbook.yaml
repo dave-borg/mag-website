@@ -357,7 +357,7 @@
             name: mag-site
             namespace: "{{ k8s.namespace }}"
           spec:
-            replicas: "{{ k8s.replicas }}"
+            replicas: 2
             selector:
               matchLabels:
                 app: mag-site
@@ -374,8 +374,8 @@
         state: present
       environment:
         K8S_AUTH_TOKEN: "{{ eks_token.stdout }}"
-        K8S_HOST: "{{ eks_cluster.cluster.endpoint }}"
-        K8S_VALIDATE_CERTS: "{{ eks_cluster.cluster.certificate_authority.data }}"
+        K8S_HOST: "{{ eks_cluster.endpoint }}"
+        K8S_VALIDATE_CERTS: "{{ eks_cluster.certificate_authority.data }}"
 
     - name: Create service
       kubernetes.core.k8s:
@@ -396,5 +396,39 @@
         state: present
       environment:
         K8S_AUTH_TOKEN: "{{ eks_token.stdout }}"
-        K8S_HOST: "{{ eks_cluster.cluster.endpoint }}"
-        K8S_VALIDATE_CERTS: "{{ eks_cluster.cluster.certificate_authority.data }}"
+        K8S_HOST: "{{ eks_cluster.endpoint }}"
+        K8S_VALIDATE_CERTS: "{{ eks_cluster.certificate_authority.data }}"
+
+    - name: Wait for service to be ready
+      kubernetes.core.k8s_info:
+        kind: Service
+        name: mag-site
+        namespace: "{{ k8s.namespace }}"
+        wait: yes
+        wait_timeout: 300
+        wait_condition:
+          type: LoadBalancer
+          status: True
+      environment:
+        K8S_AUTH_TOKEN: "{{ eks_token.stdout }}"
+        K8S_HOST: "{{ eks_cluster.endpoint }}"
+        K8S_VALIDATE_CERTS: "{{ eks_cluster.certificate_authority.data }}"
+      register: lb_service
+      until: "lb_service.resources[0].status.loadBalancer.ingress is defined"
+      retries: 30
+      delay: 10
+
+    - name: Debug Load Balancer service
+      debug:
+        var: lb_service
+        verbosity: 0
+
+    - name: Get Load Balancer DNS name
+      set_fact:
+        lb_hostname: "{{ lb_service.resources[0].status.loadBalancer.ingress[0].hostname }}"
+
+    - name: Display Load Balancer DNS
+      debug:
+        msg: 
+          - "Website is available at: http://{{ lb_hostname }}"
+          - "Please allow a few minutes for the DNS to propagate and the service to be fully available."

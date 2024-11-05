@@ -37,7 +37,7 @@ vpc:
 # EKS Configuration
 eks:
   cluster_name: "mag-eks-cluster"
-  kubernetes_version: "1.27"
+  kubernetes_version: "1.31"
   cluster_role_name: "mag-eks-cluster-role"
   node_role_name: "mag-eks-node-role"
   node_group_name: "mag-node-group"
