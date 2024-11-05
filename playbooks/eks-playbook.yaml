@@ -1,0 +1,168 @@
+---
+# eks-playbook.yaml
+- name: Setup EKS cluster and deploy containers
+  hosts: localhost
+  gather_facts: no
+  vars_files:
+    - vars.yml
+
+  tasks:
+    - name: Ensure required Python packages are installed
+      ansible.builtin.pip:
+        name:
+          - boto3
+          - kubernetes
+        state: present
+      become: yes
+
+    - name: Create EKS cluster IAM role
+      amazon.aws.iam_role:
+        name: "{{ eks.cluster_role_name }}"
+        assume_role_policy_document: |
+          {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Principal": {
+                  "Service": "eks.amazonaws.com"
+                },
+                "Action": "sts:AssumeRole"
+              }
+            ]
+          }
+        managed_policies:
+          - "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+        profile: "{{ aws.profile }}"
+        state: present
+      register: eks_role
+
+    - name: Create EKS node group IAM role
+      amazon.aws.iam_role:
+        name: "{{ eks.node_role_name }}"
+        assume_role_policy_document: |
+          {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Principal": {
+                  "Service": "ec2.amazonaws.com"
+                },
+                "Action": "sts:AssumeRole"
+              }
+            ]
+          }
+        managed_policies:
+          - "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+          - "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+          - "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+        profile: "{{ aws.profile }}"
+        state: present
+      register: node_role
+
+    - name: Debug eks_role
+      debug:
+        var: eks_role
+
+    - name: Debug node_role
+      debug:
+        var: node_role
+
+    - name: Create EKS cluster
+      community.aws.eks_cluster:
+        name: "{{ eks.cluster_name }}"
+        version: "{{ eks.kubernetes_version }}"
+        role_arn: "{{ eks_role.iam_role.arn }}"
+        region: "{{ aws.region }}"
+        profile: "{{ aws.profile }}"
+        subnets: "{{ vpc.private_subnets | map(attribute='cidr') | list }}"
+        state: present
+        wait: yes
+      register: eks_cluster
+
+    - name: Create EKS node group
+      community.aws.eks_nodegroup:
+        cluster_name: "{{ eks.cluster_name }}"
+        name: "{{ eks.node_group_name }}"
+        node_role_arn: "{{ node_role.iam_role.arn }}"
+        scaling_config:
+          desired_size: "{{ eks.desired_nodes }}"
+          max_size: "{{ eks.max_nodes }}"
+          min_size: "{{ eks.min_nodes }}"
+        subnets: "{{ vpc.private_subnets | map(attribute='cidr') | list }}"
+        instance_types: "{{ eks.instance_types }}"
+        region: "{{ aws.region }}"
+        profile: "{{ aws.profile }}"
+        state: present
+      register: node_group
+
+    - name: Get EKS cluster credentials
+      command: >
+        aws eks get-token
+        --cluster-name {{ eks.cluster_name }}
+        --region {{ aws.region }}
+        --profile {{ aws.profile }}
+      register: eks_token
+
+    - name: Create namespace
+      kubernetes.core.k8s:
+        api_version: v1
+        kind: Namespace
+        name: "{{ k8s.namespace }}"
+        state: present
+      environment:
+        K8S_AUTH_TOKEN: "{{ eks_token.stdout }}"
+        K8S_HOST: "{{ eks_cluster.cluster.endpoint }}"
+        K8S_VALIDATE_CERTS: "{{ eks_cluster.cluster.certificate_authority.data }}"
+
+    - name: Deploy application
+      kubernetes.core.k8s:
+        definition:
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: mag-site
+            namespace: "{{ k8s.namespace }}"
+          spec:
+            replicas: "{{ k8s.replicas }}"
+            selector:
+              matchLabels:
+                app: mag-site
+            template:
+              metadata:
+                labels:
+                  app: mag-site
+              spec:
+                containers:
+                - name: mag-site
+                  image: "{{ aws_caller_info.account }}.dkr.ecr.{{ aws.region }}.amazonaws.com/{{ ecr.repository }}:latest"
+                  ports:
+                    - containerPort: 80
+        state: present
+      environment:
+        K8S_AUTH_TOKEN: "{{ eks_token.stdout }}"
+        K8S_HOST: "{{ eks_cluster.cluster.endpoint }}"
+        K8S_VALIDATE_CERTS: "{{ eks_cluster.cluster.certificate_authority.data }}"
+
+    - name: Create service
+      kubernetes.core.k8s:
+        definition:
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: mag-site
+            namespace: "{{ k8s.namespace }}"
+          spec:
+            type: LoadBalancer
+            ports:
+              - port: 80
+                targetPort: 80
+                protocol: TCP
+            selector:
+              app: mag-site
+        state: present
+      environment:
+        K8S_AUTH_TOKEN: "{{ eks_token.stdout }}"
+        K8S_HOST: "{{ eks_cluster.cluster.endpoint }}"
+        K8S_VALIDATE_CERTS: "{{ eks_cluster.cluster.certificate_authority.data }}"

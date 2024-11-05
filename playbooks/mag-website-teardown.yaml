@@ -1,0 +1,11 @@
+- name: "EKS: Remove the EKS Cluster and containers"
+  import_playbook: eks-teardown.yaml
+  tags: [eks]
+
+- name: "VPC: Teardown network infrastructure"
+  import_playbook: vpc-teardown.yaml
+  tags: [vpc]
+
+- name: "Docker Img: Teardown Docker image and ECR"
+  import_playbook: docker-teardown.yaml
+  tags: [docker]

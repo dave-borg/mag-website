@@ -1,0 +1,62 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "iam:CreateRole",
+                "iam:DeleteRole",
+                "iam:GetRole",
+                "iam:PutRolePolicy",
+                "iam:DeleteRolePolicy",
+                "iam:AttachRolePolicy",
+                "iam:DetachRolePolicy",
+                "iam:ListAttachedRolePolicies",
+                "iam:ListRolePolicies",
+                "iam:TagRole",
+                "iam:UntagRole",
+                "iam:PassRole",
+                "iam:CreateInstanceProfile",
+                "iam:DeleteInstanceProfile",
+                "iam:GetInstanceProfile",
+                "iam:ListInstanceProfiles",
+                "iam:ListInstanceProfilesForRole",
+                "iam:AddRoleToInstanceProfile",
+                "iam:RemoveRoleFromInstanceProfile"
+            ],
+            "Resource": [
+                "arn:aws:iam::529088273030:role/mag-eks-*",
+                "arn:aws:iam::529088273030:instance-profile/mag-eks-*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "eks:CreateCluster",
+                "eks:DeleteCluster",
+                "eks:DescribeCluster",
+                "eks:ListClusters",
+                "eks:UpdateClusterVersion",
+                "eks:UpdateClusterConfig",
+                "eks:CreateNodegroup",
+                "eks:DeleteNodegroup",
+                "eks:DescribeNodegroup",
+                "eks:ListNodegroups",
+                "eks:UpdateNodegroupConfig",
+                "eks:UpdateNodegroupVersion"
+            ],
+            "Resource": [
+                "arn:aws:eks:ap-southeast-2:529088273030:cluster/mag-eks-*",
+                "arn:aws:eks:ap-southeast-2:529088273030:nodegroup/mag-eks-*/*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "eks:ListUpdates",
+                "eks:DescribeUpdate"
+            ],
+            "Resource": "*"
+        }
+    ]
+}

@@ -27,13 +27,36 @@
         ecr_registry: "{{ aws_caller_info.account }}.dkr.ecr.{{ aws.region }}.amazonaws.com"
         repository_uri: "{{ aws_caller_info.account }}.dkr.ecr.{{ aws.region }}.amazonaws.com/{{ ecr.repository }}"
 
+    - name: Build Docker image locally
+      community.docker.docker_image:
+        build:
+          path: "{{ docker.build_path }}"
+          pull: yes
+        name: "{{ docker.local_image_name }}"
+        source: build
+        force_source: yes
+        tag: "{{ docker.img_tag }}"
+      environment:
+        DOCKER_HOST: "unix://{{ docker.socket_path }}"
+      register: build_result
+
+    - name: Tag image with ECR repository version
+      command: docker tag "{{ docker.local_image_name }}:{{ docker.img_tag }}" "{{ repository_uri }}:{{ docker.img_tag }}"
+      environment:
+        DOCKER_HOST: "unix://{{ docker.socket_path }}"
+
+    - name: Tag image with ECR repository latest
+      command: docker tag "{{ docker.local_image_name }}:{{ docker.img_tag }}" "{{ repository_uri }}:latest"
+      environment:
+        DOCKER_HOST: "unix://{{ docker.socket_path }}"
+
     - name: Check if ECR repository exists
       community.aws.ecs_ecr:
         profile: "{{ aws.profile }}"
         region: "{{ aws.region }}"
         name: "{{ ecr.repository }}"
       register: ecr_repo
-      ignore_errors: yes
+      ignore_errors: true
 
     - name: Create ECR repository if it doesn't exist
       community.aws.ecs_ecr:
@@ -50,33 +73,31 @@
         registry_url: "{{ ecr_registry }}"
         username: AWS
         password: "{{ lookup('pipe', 'aws ecr get-login-password --region ' + aws.region + ' --profile ' + aws.profile) }}"
-        reauthorize: yes
+        reauthorize: true
+      environment:
+        DOCKER_HOST: "unix://{{ docker.socket_path }}"
 
-    - name: Build and tag Docker image
+    - name: Push to ECR (version tag)
       community.docker.docker_image:
-        build:
-          path: "{{ docker.build_path }}"
-          pull: yes
-        name: "{{ repository_uri }}"
-        source: build
-        force_source: yes
-        tags:
-          - "{{ docker.img_tag }}"
-          - latest
-      register: build_result
-
-    - name: Push tagged images to ECR
-      community.docker.docker_image:
-        name: "{{ repository_uri }}"
-        tag: "{{ item }}"
-        push: yes
         source: local
-      loop:
-        - "{{ image_tag }}"
-        - latest
-      when: build_result is success
+        name: "{{ repository_uri }}"
+        tag: "{{ docker.img_tag }}"
+        push: yes
+        force_tag: yes
+      environment:
+        DOCKER_HOST: "unix://{{ docker.socket_path }}"
 
-    - name: Clean up local images
+    - name: Push to ECR (latest tag)
+      community.docker.docker_image:
+        source: local
+        name: "{{ repository_uri }}"
+        tag: "latest"
+        push: yes
+        force_tag: yes
+      environment:
+        DOCKER_HOST: "unix://{{ docker.socket_path }}"
+
+    - name: Clean up ECR tags locally
       community.docker.docker_image:
         name: "{{ repository_uri }}"
         tag: "{{ item }}"
@@ -84,4 +105,13 @@
       loop:
         - "{{ docker.img_tag }}"
         - latest
-      when: build_result is success
+      environment:
+        DOCKER_HOST: "unix://{{ docker.socket_path }}"
+
+    - name: Clean up local image
+      community.docker.docker_image:
+        name: "{{ docker.local_image_name }}"
+        tag: "{{ docker.img_tag }}"
+        state: absent
+      environment:
+        DOCKER_HOST: "unix://{{ docker.socket_path }}"

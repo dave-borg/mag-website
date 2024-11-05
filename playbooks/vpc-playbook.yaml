@@ -1,0 +1,115 @@
+---
+# aws-network-setup.yml
+- name: Setup AWS VPC and EKS Load Balancer
+  hosts: localhost
+  gather_facts: no
+  vars_files:
+    - vars.yml
+  
+  tasks:
+    - name: Create VPC
+      amazon.aws.ec2_vpc_net:
+        name: "{{ vpc.name }}"
+        cidr_block: "{{ vpc.cidr }}"
+        region: "{{ aws.region }}"
+        profile: "{{ aws.profile }}"
+        dns_support: true
+        dns_hostnames: true
+        tenancy: default
+        state: present
+      register: vpc_result
+
+    - name: Create Internet Gateway
+      amazon.aws.ec2_vpc_igw:
+        vpc_id: "{{ vpc_result.vpc.id }}"
+        region: "{{ aws.region }}"
+        profile: "{{ aws.profile }}"
+        state: present
+      register: igw_result
+
+    - name: Create private subnets
+      amazon.aws.ec2_vpc_subnet:
+        state: present
+        vpc_id: "{{ vpc_result.vpc.id }}"
+        region: "{{ aws.region }}"
+        profile: "{{ aws.profile }}"
+        cidr: "{{ item.cidr }}"
+        az: "{{ aws.region }}{{ item.az }}"
+        map_public: false
+        tags:
+          Name: "{{ item.name }}"
+          kubernetes.io/role/internal-elb: "1"
+      loop: "{{ vpc.private_subnets }}"
+      register: private_subnets
+
+    - name: Create public subnets for load balancer
+      amazon.aws.ec2_vpc_subnet:
+        state: present
+        vpc_id: "{{ vpc_result.vpc.id }}"
+        region: "{{ aws.region }}"
+        profile: "{{ aws.profile }}"
+        cidr: "{{ item.cidr }}"
+        az: "{{ aws.region }}{{ item.az }}"
+        map_public: true
+        tags:
+          Name: "{{ item.name }}"
+          kubernetes.io/role/elb: "1"
+      loop: "{{ vpc.public_subnets }}"
+      register: public_subnets
+
+    - name: Create NAT Gateway EIP
+      amazon.aws.ec2_eip:
+        region: "{{ aws.region }}"
+        profile: "{{ aws.profile }}"
+      register: nat_eip
+
+    - name: Create NAT Gateway
+      amazon.aws.ec2_vpc_nat_gateway:
+        state: present
+        subnet_id: "{{ public_subnets.results[0].subnet.id }}"
+        allocation_id: "{{ nat_eip.allocation_id }}"
+        region: "{{ aws.region }}"
+        profile: "{{ aws.profile }}"
+        wait: yes
+      register: nat_gateway
+
+    - name: Create public route table
+      amazon.aws.ec2_vpc_route_table:
+        vpc_id: "{{ vpc_result.vpc.id }}"
+        region: "{{ aws.region }}"
+        profile: "{{ aws.profile }}"
+        tags:
+          Name: "{{ vpc.name }}-public-rt"
+        subnets: "{{ public_subnets.results | map(attribute='subnet.id') | list }}"
+        routes:
+          - dest: 0.0.0.0/0
+            gateway_id: "{{ igw_result.gateway_id }}"
+      register: public_route_table
+
+    - name: Create private route table
+      amazon.aws.ec2_vpc_route_table:
+        vpc_id: "{{ vpc_result.vpc.id }}"
+        region: "{{ aws.region }}"
+        profile: "{{ aws.profile }}"
+        tags:
+          Name: "{{ vpc.name }}-private-rt"
+        subnets: "{{ private_subnets.results | map(attribute='subnet.id') | list }}"
+        routes:
+          - dest: 0.0.0.0/0
+            nat_gateway_id: "{{ nat_gateway.nat_gateway_id }}"
+      register: private_route_table
+
+    - name: Create security group for load balancer
+      amazon.aws.ec2_security_group:
+        name: "{{ vpc.name }}-lb-sg"
+        description: Security group for load balancer
+        vpc_id: "{{ vpc_result.vpc.id }}"
+        region: "{{ aws.region }}"
+        profile: "{{ aws.profile }}"
+        rules:
+          - proto: tcp
+            ports: 
+              - 80
+            cidr_ip: 0.0.0.0/0
+            rule_desc: Allow HTTP from anywhere
+      register: lb_security_group

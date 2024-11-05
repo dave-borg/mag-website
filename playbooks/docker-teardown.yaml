@@ -1,0 +1,56 @@
+---
+# docker-teardown.yml
+- name: Teardown Hugo site from ECR
+  hosts: localhost
+  gather_facts: no
+  vars_files:
+    - vars.yml
+
+  tasks:
+    - name: Get AWS account ID
+      amazon.aws.aws_caller_info:
+        profile: "{{ aws.profile }}"
+      register: aws_caller_info
+
+    - name: Set ECR repository URI
+      set_fact:
+        ecr_registry: "{{ aws_caller_info.account }}.dkr.ecr.{{ aws.region }}.amazonaws.com"
+        repository_uri: "{{ aws_caller_info.account }}.dkr.ecr.{{ aws.region }}.amazonaws.com/{{ ecr.repository }}"
+
+    - name: Get ECR repository info
+      community.aws.ecs_ecr:
+        name: "{{ ecr.repository }}"
+        profile: "{{ aws.profile }}"
+        region: "{{ aws.region }}"
+      register: ecr_info
+      ignore_errors: true
+
+    - name: List images in ECR repository
+      command: >
+        aws ecr list-images 
+        --repository-name {{ ecr.repository }}
+        --profile {{ aws.profile }}
+        --region {{ aws.region }}
+      register: ecr_images
+      ignore_errors: yes
+
+    - name: Debug ECR images
+      debug:
+        var: ecr_images
+
+    - name: Delete images from ECR
+      command: >
+        aws ecr batch-delete-image
+        --repository-name {{ ecr.repository }}
+        --profile {{ aws.profile }}
+        --region {{ aws.region }}
+        --image-ids "imageTag={{ item }}"
+      loop:
+        - "{{ docker.img_tag }}"
+        - "latest"
+      ignore_errors: yes
+      when: ecr_images.rc == 0
+
+    - name: Display cleanup results
+      debug:
+        msg: "ECR repository {{ ecr_info.repository }} and associated resources have been removed"

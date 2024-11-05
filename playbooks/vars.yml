@@ -13,3 +13,41 @@ docker:
   build_path: "{{ playbook_dir }}/../"
   build_args: []
   img_tag: 0.1
+  local_image_name: "mag-site"
+  socket_path: "/Users/borg/.docker/run/docker.sock"
+
+vpc:
+  name: "mag-vpc"
+  cidr: "10.0.0.0/16"
+  private_subnets:
+    - name: "private-subnet-1"
+      cidr: "10.0.1.0/24"
+      az: "a"
+    - name: "private-subnet-2"
+      cidr: "10.0.2.0/24"
+      az: "b"
+  public_subnets:
+    - name: "public-subnet-1"
+      cidr: "10.0.3.0/24"
+      az: "a"
+    - name: "public-subnet-2"
+      cidr: "10.0.4.0/24"
+      az: "b"
+
+# EKS Configuration
+eks:
+  cluster_name: "mag-eks-cluster"
+  cluster_role_name: "mag-eks-cluster-role"
+  node_role_name: "mag-eks-node-role"
+  kubernetes_version: "1.27"
+  node_group_name: "mag-node-group"
+  desired_nodes: 2
+  min_nodes: 1
+  max_nodes: 3
+  instance_types: 
+    - "t3.small"
+
+# Kubernetes Configuration
+k8s:
+  namespace: "mag-site"
+  replicas: 2
