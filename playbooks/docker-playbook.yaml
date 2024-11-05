@@ -1,0 +1,87 @@
+---
+# hugo-deploy.yml
+- name: Deploy Hugo site to ECR
+  hosts: localhost
+  gather_facts: no
+  vars_files:
+    - vars.yml
+  vars:
+    project_root: "{{ playbook_dir }}"
+
+  tasks:
+    - name: Ensure required collections are installed
+      ansible.builtin.pip:
+        name:
+          - boto3
+          - docker
+        state: present
+      become: yes
+
+    - name: Get AWS account ID
+      amazon.aws.aws_caller_info:
+        profile: "{{ aws.profile }}"
+      register: aws_caller_info
+
+    - name: Set ECR repository URI
+      set_fact:
+        ecr_registry: "{{ aws_caller_info.account }}.dkr.ecr.{{ aws.region }}.amazonaws.com"
+        repository_uri: "{{ aws_caller_info.account }}.dkr.ecr.{{ aws.region }}.amazonaws.com/{{ ecr.repository }}"
+
+    - name: Check if ECR repository exists
+      community.aws.ecs_ecr:
+        profile: "{{ aws.profile }}"
+        region: "{{ aws.region }}"
+        name: "{{ ecr.repository }}"
+      register: ecr_repo
+      ignore_errors: yes
+
+    - name: Create ECR repository if it doesn't exist
+      community.aws.ecs_ecr:
+        profile: "{{ aws.profile }}"
+        region: "{{ aws.region }}"
+        name: "{{ ecr.repository }}"
+        registry_id: "{{ aws_caller_info.account }}"
+        image_tag_mutability: mutable
+        state: present
+      when: ecr_repo.failed or ecr_repo.repositories is not defined
+
+    - name: Get ECR login token
+      community.docker.docker_login:
+        registry_url: "{{ ecr_registry }}"
+        username: AWS
+        password: "{{ lookup('pipe', 'aws ecr get-login-password --region ' + aws.region + ' --profile ' + aws.profile) }}"
+        reauthorize: yes
+
+    - name: Build and tag Docker image
+      community.docker.docker_image:
+        build:
+          path: "{{ docker.build_path }}"
+          pull: yes
+        name: "{{ repository_uri }}"
+        source: build
+        force_source: yes
+        tags:
+          - "{{ docker.img_tag }}"
+          - latest
+      register: build_result
+
+    - name: Push tagged images to ECR
+      community.docker.docker_image:
+        name: "{{ repository_uri }}"
+        tag: "{{ item }}"
+        push: yes
+        source: local
+      loop:
+        - "{{ image_tag }}"
+        - latest
+      when: build_result is success
+
+    - name: Clean up local images
+      community.docker.docker_image:
+        name: "{{ repository_uri }}"
+        tag: "{{ item }}"
+        state: absent
+      loop:
+        - "{{ docker.img_tag }}"
+        - latest
+      when: build_result is success

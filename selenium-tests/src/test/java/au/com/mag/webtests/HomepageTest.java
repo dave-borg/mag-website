@@ -1,19 +1,23 @@
 package au.com.mag.webtests;
 
+import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.junit.Assert.assertTrue;
 
+import java.net.MalformedURLException;
 import java.time.Duration;
 import java.util.Arrays;
+import java.net.URL;
 
 import static org.junit.Assert.assertNotEquals;
 
@@ -22,12 +26,8 @@ public class HomepageTest {
     private static WebDriver driver;
 
     @BeforeClass
-    public static void setUp() {
+    public static void setUpClass() {
         try {
-            // Set the path to the ChromeDriver executable
-            System.setProperty("webdriver.chrome.driver", "/opt/homebrew/bin/chromedriver");
-            System.out.println("ChromeDriver path: " + System.getProperty("webdriver.chrome.driver"));
-
             // Set the path to the Chrome binary
             ChromeOptions options = new ChromeOptions();
             options.setBinary("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome");
@@ -37,22 +37,32 @@ public class HomepageTest {
             options.setExperimentalOption("excludeSwitches", Arrays.asList("enable-automation"));
             System.out.println("Chrome binary path: " + options.getBrowserName());
 
-            // Initialize the ChromeDriver
-            driver = new ChromeDriver(options);
-            System.out.println("ChromeDriver initialized");
-
-            // Open the Hugo website
-            String url = "http://localhost:1313";
-            System.out.println("Opening URL: " + url);
-            driver.get(url);
-
-            // Wait for the page to load
-            Thread.sleep(3000);
+            // Initialize the RemoteWebDriver
+            URL remoteUrl = new URL("http://192.168.128.142:4444/wd/hub");
+            driver = new RemoteWebDriver(remoteUrl, options);
+            System.out.println("RemoteWebDriver initialized");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
             if (driver != null) {
                 driver.quit();
             }
+        }
+    }
+
+    @Before
+    public void setUp() {
+        // Open the Hugo website
+        String url = "https://www.mag.com.au/";
+        System.out.println("Opening URL: " + url);
+        driver.get(url);
+
+        // Wait for the page to load
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -100,9 +110,9 @@ public class HomepageTest {
         String originalUrl = driver.getCurrentUrl();
 
         // Find link within nav using XPath
-            WebElement aircraftLink = driver.findElement(By.xpath("//button//span[contains(text(), 'Our Aircraft')]"));
+        WebElement aircraftLink = driver.findElement(By.xpath("//button//span[contains(text(), 'Our Aircraft')]"));
         aircraftLink.click();
-
+        
         WebElement okyLink = driver.findElement(By.xpath("//nav//a[contains(text(), 'VH-OKY - 1999 Piper Archer III')]"));
         okyLink.click();
 
@@ -190,6 +200,10 @@ public class HomepageTest {
 
         assertTrue(driver.getPageSource().contains(
                 "ABN 62 004 589 557"));
+
+        // Go back and wait for the navigation to complete
+        driver.navigate().back();
+        wait.until(webDriver -> webDriver.getCurrentUrl().equals(originalUrl));
     }
 
     @Test
@@ -206,12 +220,21 @@ public class HomepageTest {
 
         assertTrue(driver.getPageSource().contains(
                 "This Policy may change from time to time and is available on our website at"));
+
+        // Go back and wait for the navigation to complete
+        driver.navigate().back();
+        wait.until(webDriver -> webDriver.getCurrentUrl().equals(originalUrl));
     }
 
-    
+    @After
+    public void tearDown() {
+        // Optionally, you can add code here to reset the state if needed
+    }
 
     @AfterClass
-    public static void tearDown() {
-        driver.quit();
+    public static void tearDownClass() {
+        if (driver != null) {
+            driver.quit();
+        }
     }
 }

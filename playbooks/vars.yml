@@ -1,0 +1,15 @@
+---
+aws:
+  region: ap-southeast-2
+  profile: mag
+
+# ECR Configuration
+ecr:
+  repository: mag-site-repo
+  force_delete: false
+
+# Docker Configuration
+docker:
+  build_path: "{{ playbook_dir }}/../"
+  build_args: []
+  img_tag: 0.1
