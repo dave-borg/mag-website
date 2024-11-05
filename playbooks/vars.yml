@@ -37,17 +37,15 @@ vpc:
 # EKS Configuration
 eks:
   cluster_name: "mag-eks-cluster"
+  kubernetes_version: "1.27"
   cluster_role_name: "mag-eks-cluster-role"
   node_role_name: "mag-eks-node-role"
-  kubernetes_version: "1.27"
   node_group_name: "mag-node-group"
   desired_nodes: 2
   min_nodes: 1
-  max_nodes: 3
-  instance_types: 
-    - "t3.small"
+  max_nodes: 4
+  instance_types: "t3.small"
 
-# Kubernetes Configuration
 k8s:
   namespace: "mag-site"
   replicas: 2

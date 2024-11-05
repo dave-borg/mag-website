@@ -15,8 +15,123 @@
         state: present
       become: yes
 
+    - name: Get AWS account ID
+      amazon.aws.aws_caller_info:
+        profile: "{{ aws.profile }}"
+      register: aws_caller_info
+
+    - name: Get VPC ID
+      amazon.aws.ec2_vpc_net_info:
+        region: "{{ aws.region }}"
+        profile: "{{ aws.profile }}"
+        filters:
+          "tag:Name": "{{ vpc.name }}"
+      register: vpc_info
+
+    - name: Get subnet information
+      amazon.aws.ec2_vpc_subnet_info:
+        region: "{{ aws.region }}"
+        profile: "{{ aws.profile }}"
+        filters:
+          vpc-id: "{{ vpc_info.vpcs[0].id }}"
+      register: subnet_info
+
+    - name: Create EKS cluster security group
+      amazon.aws.ec2_security_group:
+        name: "{{ eks.cluster_name }}-cluster-sg"
+        description: Security group for EKS cluster
+        vpc_id: "{{ vpc_info.vpcs[0].id }}"
+        region: "{{ aws.region }}"
+        profile: "{{ aws.profile }}"
+        rules:
+          - proto: tcp
+            ports: 
+              - 443  # HTTPS for Kubernetes API
+            cidr_ip: 0.0.0.0/0
+            rule_desc: Allow HTTPS from anywhere
+      register: eks_cluster_sg
+
+    - name: Create EKS node security group
+      amazon.aws.ec2_security_group:
+        name: "{{ eks.cluster_name }}-node-sg"
+        description: Security group for EKS nodes
+        vpc_id: "{{ vpc_info.vpcs[0].id }}"
+        region: "{{ aws.region }}"
+        profile: "{{ aws.profile }}"
+        rules:
+          - proto: tcp
+            from_port: 0
+            to_port: 65535
+            group_id: "{{ eks_cluster_sg.group_id }}"
+            rule_desc: Allow all TCP traffic from cluster security group
+          - proto: udp
+            from_port: 0
+            to_port: 65535
+            group_id: "{{ eks_cluster_sg.group_id }}"
+            rule_desc: Allow all UDP traffic from cluster security group
+          - proto: icmp
+            from_port: -1
+            to_port: -1
+            group_id: "{{ eks_cluster_sg.group_id }}"
+            rule_desc: Allow all ICMP traffic from cluster security group
+      register: eks_node_sg
+
+    - name: Update cluster security group rules
+      amazon.aws.ec2_security_group:
+        name: "{{ eks.cluster_name }}-cluster-sg"
+        description: Security group for EKS cluster
+        vpc_id: "{{ vpc_info.vpcs[0].id }}"
+        region: "{{ aws.region }}"
+        profile: "{{ aws.profile }}"
+        rules:
+          - proto: tcp
+            ports: 
+              - 443
+            cidr_ip: 0.0.0.0/0
+            rule_desc: Allow HTTPS from anywhere
+          - proto: tcp
+            from_port: 0
+            to_port: 65535
+            group_id: "{{ eks_node_sg.group_id }}"
+            rule_desc: Allow all TCP traffic from node security group
+          - proto: udp
+            from_port: 0
+            to_port: 65535
+            group_id: "{{ eks_node_sg.group_id }}"
+            rule_desc: Allow all UDP traffic from node security group
+          - proto: icmp
+            from_port: -1
+            to_port: -1
+            group_id: "{{ eks_node_sg.group_id }}"
+            rule_desc: Allow all ICMP traffic from node security group
+
+    - name: Check if EKS cluster role exists
+      community.aws.iam_role_info:
+        name: "{{ eks.cluster_role_name }}"
+        profile: "{{ aws.profile }}"
+      register: existing_cluster_role
+      ignore_errors: yes
+
+    - name: Debug existing role
+      debug:
+        var: existing_cluster_role
+        verbosity: 1
+
+    - name: Remove existing EKS cluster role if exists
+      community.aws.iam_role:
+        name: "{{ eks.cluster_role_name }}"
+        state: absent
+        profile: "{{ aws.profile }}"
+      when: existing_cluster_role.iam_roles is defined
+      ignore_errors: yes
+
+    - name: Wait for role deletion
+      pause:
+        seconds: 10
+      when: existing_cluster_role.iam_roles is defined
+
     - name: Create EKS cluster IAM role
-      amazon.aws.iam_role:
+      community.aws.iam_role:
         name: "{{ eks.cluster_role_name }}"
         assume_role_policy_document: |
           {
@@ -37,8 +152,56 @@
         state: present
       register: eks_role
 
+    - name: Debug EKS role creation
+      debug:
+        var: eks_role
+        verbosity: 1
+
+    - name: Wait for IAM role propagation
+      pause:
+        seconds: 15
+
+    - name: Verify EKS cluster role
+      community.aws.iam_role_info:
+        name: "{{ eks.cluster_role_name }}"
+        profile: "{{ aws.profile }}"
+      register: verify_cluster_role
+
+    - name: Debug verified role
+      debug:
+        var: verify_cluster_role
+        verbosity: 1
+
+    - name: Debug role info
+      debug:
+        msg: 
+          - "Role ARN: {{ verify_cluster_role.iam_roles[0].arn | default('Not found') if verify_cluster_role.iam_roles else 'Not found' }}"
+          - "Role Name: {{ verify_cluster_role.iam_roles[0].role_name | default('Not found') if verify_cluster_role.iam_roles else 'Not found' }}"
+          - "Role Path: {{ verify_cluster_role.iam_roles[0].path | default('Not found') if verify_cluster_role.iam_roles else 'Not found' }}"
+        verbosity: 1
+
+    - name: List attached role policies
+      command: >
+        aws iam list-attached-role-policies
+        --role-name {{ eks.cluster_role_name }}
+        --profile {{ aws.profile }}
+      register: attached_policies
+      ignore_errors: yes
+
+    - name: Debug attached policies
+      debug:
+        var: attached_policies
+        verbosity: 1
+
+    # Prior tasks remain the same until role verification...
+
+    - name: Fail if role verification failed
+      fail:
+        msg: "EKS cluster role was not created properly. Verification output: {{ verify_cluster_role | to_nice_json }}"
+      when: not verify_cluster_role.iam_roles
+
     - name: Create EKS node group IAM role
-      amazon.aws.iam_role:
+      community.aws.iam_role:
         name: "{{ eks.node_role_name }}"
         assume_role_policy_document: |
           {
@@ -61,41 +224,105 @@
         state: present
       register: node_role
 
-    - name: Debug eks_role
-      debug:
-        var: eks_role
+    - name: Create EKS service-linked role
+      command: >
+        aws iam create-service-linked-role 
+        --aws-service-name eks.amazonaws.com
+        --profile {{ aws.profile }}
+      register: service_role_result
+      failed_when: 
+        - service_role_result.rc != 0 
+        - '"role name AWSServiceRoleForAmazonEKS has been taken" not in service_role_result.stderr'
+        - '"Role already exists" not in service_role_result.stderr'
+      changed_when: service_role_result.rc == 0
 
-    - name: Debug node_role
-      debug:
-        var: node_role
+    - name: Wait for service-linked role propagation
+      pause:
+        seconds: 10
+      when: service_role_result.changed
 
     - name: Create EKS cluster
       community.aws.eks_cluster:
         name: "{{ eks.cluster_name }}"
         version: "{{ eks.kubernetes_version }}"
-        role_arn: "{{ eks_role.iam_role.arn }}"
+        role_arn: "arn:aws:iam::{{ aws_caller_info.account }}:role/{{ eks.cluster_role_name }}"
         region: "{{ aws.region }}"
         profile: "{{ aws.profile }}"
-        subnets: "{{ vpc.private_subnets | map(attribute='cidr') | list }}"
+        subnets: "{{ subnet_info.subnets | selectattr('tags.Name', 'match', '^private-subnet-.*') | map(attribute='id') | list }}"
+        security_groups: ["{{ eks_cluster_sg.group_id }}"]
         state: present
         wait: yes
       register: eks_cluster
 
+    - name: Update node role trust relationship
+      community.aws.iam_role:
+        name: "{{ eks.node_role_name }}"
+        assume_role_policy_document: |
+          {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Principal": {
+                  "Service": [
+                    "ec2.amazonaws.com",
+                    "eks.amazonaws.com"
+                  ]
+                },
+                "Action": "sts:AssumeRole"
+              }
+            ]
+          }
+        profile: "{{ aws.profile }}"
+        state: present
+
     - name: Create EKS node group
       community.aws.eks_nodegroup:
-        cluster_name: "{{ eks.cluster_name }}"
         name: "{{ eks.node_group_name }}"
-        node_role_arn: "{{ node_role.iam_role.arn }}"
+        cluster_name: "{{ eks.cluster_name }}"
+        node_role: "arn:aws:iam::{{ aws_caller_info.account }}:role/{{ eks.node_role_name }}"  # Using full ARN
         scaling_config:
           desired_size: "{{ eks.desired_nodes }}"
           max_size: "{{ eks.max_nodes }}"
           min_size: "{{ eks.min_nodes }}"
-        subnets: "{{ vpc.private_subnets | map(attribute='cidr') | list }}"
+        subnets: "{{ subnet_info.subnets | selectattr('tags.Name', 'match', '^private-subnet-.*') | map(attribute='id') | list }}"
         instance_types: "{{ eks.instance_types }}"
         region: "{{ aws.region }}"
         profile: "{{ aws.profile }}"
         state: present
       register: node_group
+
+    - name: Update kubeconfig
+      command: >
+        aws eks update-kubeconfig
+        --name {{ eks.cluster_name }}
+        --region {{ aws.region }}
+        --profile {{ aws.profile }}
+      register: kubeconfig_result
+
+    - name: Debug kubeconfig result
+      debug:
+        var: kubeconfig_result
+        verbosity: 1
+
+    - name: Wait for cluster access
+      command: >
+        kubectl get nodes
+      register: node_check
+      until: node_check.rc == 0
+      retries: 10
+      delay: 30
+      ignore_errors: yes
+
+    - name: Create namespace
+      kubernetes.core.k8s:
+        kubeconfig: ~/.kube/config
+        definition:
+          apiVersion: v1
+          kind: Namespace
+          metadata:
+            name: "{{ k8s.namespace }}"
+        state: present
 
     - name: Get EKS cluster credentials
       command: >
@@ -105,6 +332,11 @@
         --profile {{ aws.profile }}
       register: eks_token
 
+    - name: Debug  EKS token
+      debug:
+        var: eks_cluster
+        verbosity: 1
+
     - name: Create namespace
       kubernetes.core.k8s:
         api_version: v1
@@ -113,8 +345,8 @@
         state: present
       environment:
         K8S_AUTH_TOKEN: "{{ eks_token.stdout }}"
-        K8S_HOST: "{{ eks_cluster.cluster.endpoint }}"
-        K8S_VALIDATE_CERTS: "{{ eks_cluster.cluster.certificate_authority.data }}"
+        K8S_HOST: "{{ eks_cluster.endpoint }}"
+        K8S_VALIDATE_CERTS: "{{ eks_cluster.certificate_authority.data }}"
 
     - name: Deploy application
       kubernetes.core.k8s:

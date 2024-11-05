@@ -108,7 +108,7 @@
         profile: "{{ aws.profile }}"
         rules:
           - proto: tcp
-            ports: 
+            ports:
               - 80
             cidr_ip: 0.0.0.0/0
             rule_desc: Allow HTTP from anywhere
