@@ -1,0 +1,73 @@
+aws eks update-kubeconfig --name mag-eks --region ap-southeast-2 --profile mag
+
+kubectl cluster-info
+
+# List all nodes and their status
+kubectl get nodes -o wide
+
+# Get detailed information about nodes
+kubectl describe nodes
+
+kubectl get all
+
+# Check pods across all namespaces
+kubectl get pods --all-namespaces
+
+# Check pods in your specific namespace
+kubectl get pods -n default
+
+# Get deployments
+kubectl get deployments
+
+# Get detailed deployment info
+kubectl describe deployment mag-site
+
+# List services
+kubectl get services
+
+# Get detailed service info
+kubectl describe service mag-site
+
+# This will show the external IP/DNS if the load balancer is properly configured
+kubectl get service mag-site -o wide
+
+# Get all events sorted by timestamp
+kubectl get events --sort-by='.lastTimestamp'
+
+# Replace pod-name with the actual pod name from kubectl get pods
+kubectl logs pod-name
+
+kubectl get pods -n kube-system | grep aws-load-balancer-controller
+
+
+# Check CoreDNS pods
+kubectl get pods -n kube-system | grep coredns
+
+# Check CNI plugins
+kubectl get daemonset -n kube-system aws-node
+
+kubectl get serviceaccounts
+
+# Get into a pod (replace pod-name with actual pod name)
+kubectl exec -it pod-name -- /bin/sh
+# Then try to curl the service
+curl mag-site:80
+
+
+
+
+# =================================================================================
+# Testing the service
+
+
+# Check if the AWS Load Balancer Controller is running
+kubectl get pods -n kube-system | grep aws-load-balancer-controller
+
+# Check the load balancer controller logs if there are issues
+kubectl logs -n kube-system deployment/aws-load-balancer-controller
+
+# Check the service status
+kubectl describe service mag-site -n mag-site
+
+# Watch the events in the mag-site namespace
+kubectl get events -n mag-site --sort-by='.lastTimestamp'

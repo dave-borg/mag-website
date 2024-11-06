@@ -27,18 +27,25 @@
         ecr_registry: "{{ aws_caller_info.account }}.dkr.ecr.{{ aws.region }}.amazonaws.com"
         repository_uri: "{{ aws_caller_info.account }}.dkr.ecr.{{ aws.region }}.amazonaws.com/{{ ecr.repository }}"
 
-    - name: Build Docker image locally
-      community.docker.docker_image:
-        build:
-          path: "{{ docker.build_path }}"
-          pull: yes
-        name: "{{ docker.local_image_name }}"
-        source: build
-        force_source: yes
-        tag: "{{ docker.img_tag }}"
+    - name: Build Docker image with Buildx for AMD64
+      ansible.builtin.command: >
+        docker buildx build
+        --platform linux/amd64
+        -t {{ docker.local_image_name }}:{{ docker.img_tag }}
+        {{ docker.build_path }} --load
+      environment:
+        DOCKER_BUILDKIT: 1
+        DOCKER_HOST: "unix://{{ docker.socket_path }}"
+      register: build_output
+
+    - name: Get ECR login token
+      community.docker.docker_login:
+        registry_url: "{{ ecr_registry }}"
+        username: AWS
+        password: "{{ lookup('pipe', 'aws ecr get-login-password --region ' + aws.region + ' --profile ' + aws.profile) }}"
+        reauthorize: true
       environment:
         DOCKER_HOST: "unix://{{ docker.socket_path }}"
-      register: build_result
 
     - name: Tag image with ECR repository version
       command: docker tag "{{ docker.local_image_name }}:{{ docker.img_tag }}" "{{ repository_uri }}:{{ docker.img_tag }}"
@@ -47,6 +54,26 @@
 
     - name: Tag image with ECR repository latest
       command: docker tag "{{ docker.local_image_name }}:{{ docker.img_tag }}" "{{ repository_uri }}:latest"
+      environment:
+        DOCKER_HOST: "unix://{{ docker.socket_path }}"
+
+    - name: Push to ECR (version tag)
+      community.docker.docker_image:
+        source: local
+        name: "{{ repository_uri }}"
+        tag: "{{ docker.img_tag }}"
+        push: yes
+        force_tag: yes
+      environment:
+        DOCKER_HOST: "unix://{{ docker.socket_path }}"
+
+    - name: Push to ECR (latest tag)
+      community.docker.docker_image:
+        source: local
+        name: "{{ repository_uri }}"
+        tag: "latest"
+        push: yes
+        force_tag: yes
       environment:
         DOCKER_HOST: "unix://{{ docker.socket_path }}"
 
@@ -67,15 +94,6 @@
         image_tag_mutability: mutable
         state: present
       when: ecr_repo.failed or ecr_repo.repositories is not defined
-
-    - name: Get ECR login token
-      community.docker.docker_login:
-        registry_url: "{{ ecr_registry }}"
-        username: AWS
-        password: "{{ lookup('pipe', 'aws ecr get-login-password --region ' + aws.region + ' --profile ' + aws.profile) }}"
-        reauthorize: true
-      environment:
-        DOCKER_HOST: "unix://{{ docker.socket_path }}"
 
     - name: Push to ECR (version tag)
       community.docker.docker_image:
