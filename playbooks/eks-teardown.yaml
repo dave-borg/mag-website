@@ -20,55 +20,120 @@
         --profile {{ aws.profile }}
       ignore_errors: true
 
-    - name: Delete Kubernetes service
-      kubernetes.core.k8s:
-        kind: Service
-        name: mag-site
-        namespace: "{{ k8s.namespace }}"
-        state: absent
-      environment:
-        K8S_AUTH_TOKEN: "{{ lookup('pipe', 'aws eks get-token --cluster-name ' + eks.cluster_name + ' --region ' + aws.region + ' --profile ' + aws.profile) }}"
-        K8S_HOST: "{{ lookup('pipe', 'aws eks describe-cluster --name ' + eks.cluster_name + ' --region ' + aws.region + ' --profile ' + aws.profile + ' --query cluster.endpoint --output text') }}"
+    # First remove all workloads and wait for completion
+    - name: Delete Kubernetes service and wait for removal
+      block:
+        - name: Delete service
+          kubernetes.core.k8s:
+            kind: Service
+            name: mag-site
+            namespace: "{{ k8s.namespace }}"
+            state: absent
+          environment:
+            K8S_AUTH_TOKEN: "{{ lookup('pipe', 'aws eks get-token --cluster-name ' + eks.cluster_name + ' --region ' + aws.region + ' --profile ' + aws.profile) }}"
+            K8S_HOST: "{{ lookup('pipe', 'aws eks describe-cluster --name ' + eks.cluster_name + ' --region ' + aws.region + ' --profile ' + aws.profile + ' --query cluster.endpoint --output text') }}"
+        
+        - name: Wait for service deletion
+          command: kubectl get svc mag-site -n {{ k8s.namespace }}
+          register: svc_check
+          until: svc_check.rc != 0
+          retries: 30
+          delay: 10
+          ignore_errors: yes
       ignore_errors: true
 
-    - name: Delete Kubernetes deployment
-      kubernetes.core.k8s:
-        kind: Deployment
-        name: mag-site
-        namespace: "{{ k8s.namespace }}"
-        state: absent
-      environment:
-        K8S_AUTH_TOKEN: "{{ lookup('pipe', 'aws eks get-token --cluster-name ' + eks.cluster_name + ' --region ' + aws.region + ' --profile ' + aws.profile) }}"
-        K8S_HOST: "{{ lookup('pipe', 'aws eks describe-cluster --name ' + eks.cluster_name + ' --region ' + aws.region + ' --profile ' + aws.profile + ' --query cluster.endpoint --output text') }}"
+    - name: Delete Kubernetes deployment and wait for removal
+      block:
+        - name: Delete deployment
+          kubernetes.core.k8s:
+            kind: Deployment
+            name: mag-site
+            namespace: "{{ k8s.namespace }}"
+            state: absent
+          environment:
+            K8S_AUTH_TOKEN: "{{ lookup('pipe', 'aws eks get-token --cluster-name ' + eks.cluster_name + ' --region ' + aws.region + ' --profile ' + aws.profile) }}"
+            K8S_HOST: "{{ lookup('pipe', 'aws eks describe-cluster --name ' + eks.cluster_name + ' --region ' + aws.region + ' --profile ' + aws.profile + ' --query cluster.endpoint --output text') }}"
+        
+        - name: Wait for deployment deletion
+          command: kubectl get deployment mag-site -n {{ k8s.namespace }}
+          register: deployment_check
+          until: deployment_check.rc != 0
+          retries: 30
+          delay: 10
+          ignore_errors: yes
       ignore_errors: true
 
-    - name: Delete Kubernetes namespace
-      kubernetes.core.k8s:
-        kind: Namespace
-        name: "{{ k8s.namespace }}"
-        state: absent
-      environment:
-        K8S_AUTH_TOKEN: "{{ lookup('pipe', 'aws eks get-token --cluster-name ' + eks.cluster_name + ' --region ' + aws.region + ' --profile ' + aws.profile) }}"
-        K8S_HOST: "{{ lookup('pipe', 'aws eks describe-cluster --name ' + eks.cluster_name + ' --region ' + aws.region + ' --profile ' + aws.profile + ' --query cluster.endpoint --output text') }}"
+    - name: Delete Kubernetes namespace and wait for removal
+      block:
+        - name: Delete namespace
+          kubernetes.core.k8s:
+            kind: Namespace
+            name: "{{ k8s.namespace }}"
+            state: absent
+          environment:
+            K8S_AUTH_TOKEN: "{{ lookup('pipe', 'aws eks get-token --cluster-name ' + eks.cluster_name + ' --region ' + aws.region + ' --profile ' + aws.profile) }}"
+            K8S_HOST: "{{ lookup('pipe', 'aws eks describe-cluster --name ' + eks.cluster_name + ' --region ' + aws.region + ' --profile ' + aws.profile + ' --query cluster.endpoint --output text') }}"
+        
+        - name: Wait for namespace deletion
+          command: kubectl get namespace {{ k8s.namespace }}
+          register: namespace_check
+          until: namespace_check.rc != 0
+          retries: 60
+          delay: 10
+          ignore_errors: yes
       ignore_errors: true
 
-    - name: Delete EKS node group
-      community.aws.eks_nodegroup:
-        name: "{{ eks.node_group_name }}"
-        cluster_name: "{{ eks.cluster_name }}"
-        region: "{{ aws.region }}"
-        profile: "{{ aws.profile }}"
-        state: absent
-        wait: true
+    # Wait for all k8s resources to be fully removed before proceeding
+    - name: Pause to ensure all Kubernetes resources are cleaned up
+      pause:
+        seconds: 30
+
+    - name: Delete EKS node group and wait for removal
+      block:
+        - name: Delete node group
+          community.aws.eks_nodegroup:
+            name: "{{ eks.cluster_name }}-nodes"
+            cluster_name: "{{ eks.cluster_name }}"
+            region: "{{ aws.region }}"
+            profile: "{{ aws.profile }}"
+            state: absent
+            wait: true
+        
+        - name: Wait for node group deletion
+          command: >
+            aws eks describe-nodegroup
+            --cluster-name {{ eks.cluster_name }}
+            --nodegroup-name {{ eks.cluster_name }}-nodes
+            --region {{ aws.region }}
+            --profile {{ aws.profile }}
+          register: nodegroup_check
+          until: nodegroup_check.rc != 0
+          retries: 60
+          delay: 30
+          ignore_errors: yes
       ignore_errors: true
 
-    - name: Delete EKS cluster
-      community.aws.eks_cluster:
-        name: "{{ eks.cluster_name }}"
-        region: "{{ aws.region }}"
-        profile: "{{ aws.profile }}"
-        state: absent
-        wait: true
+    - name: Delete EKS cluster and wait for removal
+      block:
+        - name: Delete cluster
+          community.aws.eks_cluster:
+            name: "{{ eks.cluster_name }}"
+            region: "{{ aws.region }}"
+            profile: "{{ aws.profile }}"
+            state: absent
+            wait: true
+        
+        - name: Wait for cluster deletion
+          command: >
+            aws eks describe-cluster
+            --name {{ eks.cluster_name }}
+            --region {{ aws.region }}
+            --profile {{ aws.profile }}
+          register: cluster_check
+          until: cluster_check.rc != 0
+          retries: 60
+          delay: 30
+          ignore_errors: yes
       ignore_errors: true
 
     - name: Get VPC info
@@ -79,100 +144,109 @@
           "tag:Name": "{{ vpc.name }}"
       register: vpc_info
 
-    - name: Remove ingress rules from cluster security group
-      amazon.aws.ec2_security_group:
-        name: "{{ eks.cluster_name }}-cluster-sg"
-        description: "Security group for EKS cluster"
-        vpc_id: "{{ vpc_info.vpcs[0].id }}"
-        region: "{{ aws.region }}"
-        profile: "{{ aws.profile }}"
-        rules: []
-        rules_egress:
-          - proto: all
-            cidr_ip: 0.0.0.0/0
-            rule_desc: "Allow all outbound traffic"
+    # Security Group cleanup with proper waiting
+    - name: Clean up security groups
+      block:
+        - name: Remove ingress rules from cluster security group
+          amazon.aws.ec2_security_group:
+            name: "{{ eks.cluster_name }}-cluster-sg"
+            description: "Security group for EKS cluster"
+            vpc_id: "{{ vpc_info.vpcs[0].id }}"
+            region: "{{ aws.region }}"
+            profile: "{{ aws.profile }}"
+            rules: []
+            rules_egress:
+              - proto: all
+                cidr_ip: 0.0.0.0/0
+                rule_desc: "Allow all outbound traffic"
+          ignore_errors: true
+
+        - name: Wait for security group rules to be removed
+          pause:
+            seconds: 15
+
+        - name: Delete EKS cluster security group
+          amazon.aws.ec2_security_group:
+            name: "{{ eks.cluster_name }}-cluster-sg"
+            vpc_id: "{{ vpc_info.vpcs[0].id }}"
+            region: "{{ aws.region }}"
+            profile: "{{ aws.profile }}"
+            state: absent
+          register: sg_delete
+          until: sg_delete is not failed
+          retries: 30
+          delay: 10
+          ignore_errors: true
       ignore_errors: true
 
-    - name: Remove ingress rules from node security group
-      amazon.aws.ec2_security_group:
-        name: "{{ eks.cluster_name }}-node-sg"
-        description: "Security group for EKS nodes"
-        vpc_id: "{{ vpc_info.vpcs[0].id }}"
-        region: "{{ aws.region }}"
-        profile: "{{ aws.profile }}"
-        rules: []
-        rules_egress:
-          - proto: all
-            cidr_ip: 0.0.0.0/0
-            rule_desc: "Allow all outbound traffic"
-      ignore_errors: true
+    # IAM cleanup with proper waiting
+    - name: Clean up IAM roles and policies
+      block:
+        - name: Get attached policies for node role
+          command: >
+            aws iam list-attached-role-policies
+            --role-name {{ eks.node_role_name }}
+            --profile {{ aws.profile }}
+          register: node_role_policies
+          ignore_errors: true
 
-    - name: Delete EKS node security group
-      amazon.aws.ec2_security_group:
-        name: "{{ eks.cluster_name }}-node-sg"
-        vpc_id: "{{ vpc_info.vpcs[0].id }}"
-        region: "{{ aws.region }}"
-        profile: "{{ aws.profile }}"
-        state: absent
-      ignore_errors: true
+        - name: Detach policies from node role
+          command: >
+            aws iam detach-role-policy
+            --role-name {{ eks.node_role_name }}
+            --policy-arn {{ item.PolicyArn }}
+            --profile {{ aws.profile }}
+          loop: "{{ (node_role_policies.stdout | from_json).AttachedPolicies }}"
+          when: node_role_policies.rc == 0
+          ignore_errors: true
 
-    - name: Delete EKS cluster security group
-      amazon.aws.ec2_security_group:
-        name: "{{ eks.cluster_name }}-cluster-sg"
-        vpc_id: "{{ vpc_info.vpcs[0].id }}"
-        region: "{{ aws.region }}"
-        profile: "{{ aws.profile }}"
-        state: absent
-      ignore_errors: true
+        - name: Wait for policy detachment
+          pause:
+            seconds: 15
 
-    - name: Get attached policies for node role
-      command: >
-        aws iam list-attached-role-policies
-        --role-name {{ eks.node_role_name }}
-        --profile {{ aws.profile }}
-      register: node_role_policies
-      ignore_errors: true
+        - name: Delete EKS node role
+          community.aws.iam_role:
+            name: "{{ eks.node_role_name }}"
+            profile: "{{ aws.profile }}"
+            state: absent
+          register: node_role_delete
+          until: node_role_delete is not failed
+          retries: 30
+          delay: 10
+          ignore_errors: true
 
-    - name: Detach policies from node role
-      command: >
-        aws iam detach-role-policy
-        --role-name {{ eks.node_role_name }}
-        --policy-arn {{ item.PolicyArn }}
-        --profile {{ aws.profile }}
-      loop: "{{ (node_role_policies.stdout | from_json).AttachedPolicies }}"
-      ignore_errors: true
-      when: node_role_policies.rc == 0
+        - name: Get attached policies for cluster role
+          command: >
+            aws iam list-attached-role-policies
+            --role-name {{ eks.cluster_role_name }}
+            --profile {{ aws.profile }}
+          register: cluster_role_policies
+          ignore_errors: true
 
-    - name: Get attached policies for cluster role
-      command: >
-        aws iam list-attached-role-policies
-        --role-name {{ eks.cluster_role_name }}
-        --profile {{ aws.profile }}
-      register: cluster_role_policies
-      ignore_errors: true
+        - name: Detach policies from cluster role
+          command: >
+            aws iam detach-role-policy
+            --role-name {{ eks.cluster_role_name }}
+            --policy-arn {{ item.PolicyArn }}
+            --profile {{ aws.profile }}
+          loop: "{{ (cluster_role_policies.stdout | from_json).AttachedPolicies }}"
+          when: cluster_role_policies.rc == 0
+          ignore_errors: true
 
-    - name: Detach policies from cluster role
-      command: >
-        aws iam detach-role-policy
-        --role-name {{ eks.cluster_role_name }}
-        --policy-arn {{ item.PolicyArn }}
-        --profile {{ aws.profile }}
-      loop: "{{ (cluster_role_policies.stdout | from_json).AttachedPolicies }}"
-      ignore_errors: true
-      when: cluster_role_policies.rc == 0
+        - name: Wait for policy detachment
+          pause:
+            seconds: 15
 
-    - name: Delete EKS node role
-      community.aws.iam_role:
-        name: "{{ eks.node_role_name }}"
-        profile: "{{ aws.profile }}"
-        state: absent
-      ignore_errors: true
-
-    - name: Delete EKS cluster role
-      community.aws.iam_role:
-        name: "{{ eks.cluster_role_name }}"
-        profile: "{{ aws.profile }}"
-        state: absent
+        - name: Delete EKS cluster role
+          community.aws.iam_role:
+            name: "{{ eks.cluster_role_name }}"
+            profile: "{{ aws.profile }}"
+            state: absent
+          register: cluster_role_delete
+          until: cluster_role_delete is not failed
+          retries: 30
+          delay: 10
+          ignore_errors: true
       ignore_errors: true
 
     - name: Remove cluster from kubeconfig
@@ -185,3 +259,8 @@
         msg: 
           - "EKS cluster {{ eks.cluster_name }} and associated resources have been removed"
           - "Please verify in the AWS Console that all resources have been properly deleted"
+
+    # Final pause to ensure all AWS resources are fully cleaned up
+    - name: Final pause to ensure complete cleanup
+      pause:
+        seconds: 60

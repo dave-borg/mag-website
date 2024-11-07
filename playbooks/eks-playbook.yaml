@@ -37,6 +37,41 @@
           vpc-id: "{{ vpc_info.vpcs[0].id }}"
       register: subnet_info
 
+    - name: Create EKS cluster role
+      community.aws.iam_role:
+        name: "{{ eks.cluster_role_name }}"
+        assume_role_policy_document: |
+          {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Principal": {
+                  "Service": "eks.amazonaws.com"
+                },
+                "Action": "sts:AssumeRole"
+              }
+            ]
+          }
+        state: present
+        region: "{{ aws.region }}"
+        profile: "{{ aws.profile }}"
+      register: cluster_role
+
+    - name: Attach AmazonEKSClusterPolicy to cluster role
+      ansible.builtin.command:
+        cmd: "aws iam attach-role-policy --role-name {{ eks.cluster_role_name }} --policy-arn arn:aws:iam::aws:policy/AmazonEKSClusterPolicy --profile {{ aws.profile }} --region {{ aws.region }}"
+      register: attach_cluster_policy
+      changed_when: attach_cluster_policy.rc == 0
+      failed_when: 
+        - attach_cluster_policy.rc != 0 
+        - '"EntityAlreadyExists" not in attach_cluster_policy.stderr'
+      ignore_errors: yes
+
+    - name: Wait for cluster role IAM propagation
+      ansible.builtin.pause:
+        seconds: 10
+
     - name: Create EKS cluster security group
       amazon.aws.ec2_security_group:
         name: "{{ eks.cluster_name }}-cluster-sg"
@@ -71,12 +106,105 @@
         wait: yes
       register: eks_cluster
 
-    # Configure kubectl
-    - name: Update kubeconfig
+    # Configure kubectl immediately after cluster creation
+    - name: Update kubeconfig with cluster info and credentials
       ansible.builtin.command:
         cmd: "aws eks update-kubeconfig --name {{ eks.cluster_name }} --region {{ aws.region }} --profile {{ aws.profile }}"
       register: kubeconfig_update
       changed_when: "'Updated context' in kubeconfig_update.stdout"
+
+    - name: Create EKS node role
+      community.aws.iam_role:
+        name: "{{ eks.node_role_name }}"
+        assume_role_policy_document: |
+          {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Principal": {
+                  "Service": "ec2.amazonaws.com"
+                },
+                "Action": "sts:AssumeRole"
+              }
+            ]
+          }
+        state: present
+        region: "{{ aws.region }}"
+        profile: "{{ aws.profile }}"
+      register: node_role
+
+    - name: Attach policies to node role
+      ansible.builtin.command:
+        cmd: "aws iam attach-role-policy --role-name {{ eks.node_role_name }} --policy-arn {{ item }} --profile {{ aws.profile }} --region {{ aws.region }}"
+      loop:
+        - "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+        - "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+        - "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+      register: attach_policy
+      changed_when: attach_policy.rc == 0
+      failed_when: 
+        - attach_policy.rc != 0 
+        - '"EntityAlreadyExists" not in attach_policy.stderr'
+      ignore_errors: yes
+
+    - name: Create instance profile for node role
+      ansible.builtin.command:
+        cmd: "aws iam create-instance-profile --instance-profile-name {{ eks.node_role_name }} --profile {{ aws.profile }} --region {{ aws.region }}"
+      register: create_instance_profile
+      changed_when: create_instance_profile.rc == 0
+      failed_when: 
+        - create_instance_profile.rc != 0
+        - '"EntityAlreadyExists" not in create_instance_profile.stderr'
+      ignore_errors: yes
+
+    - name: Add role to instance profile
+      ansible.builtin.command:
+        cmd: "aws iam add-role-to-instance-profile --role-name {{ eks.node_role_name }} --instance-profile-name {{ eks.node_role_name }} --profile {{ aws.profile }} --region {{ aws.region }}"
+      register: add_role_to_profile
+      changed_when: add_role_to_profile.rc == 0
+      failed_when:
+        - add_role_to_profile.rc != 0
+        - '"LimitExceeded" not in add_role_to_profile.stderr'
+      ignore_errors: yes
+
+    - name: Wait for IAM role propagation
+      ansible.builtin.pause:
+        seconds: 10
+
+    - name: Create EKS node group
+      community.aws.eks_nodegroup:
+        name: "{{ eks.cluster_name }}-nodes"
+        cluster_name: "{{ eks.cluster_name }}"
+        node_role: "arn:aws:iam::{{ aws_caller_info.account }}:role/{{ eks.node_role_name }}"
+        subnets: "{{ subnet_info.subnets | selectattr('tags.Name', 'match', '^private-subnet-.*') | map(attribute='id') | list }}"
+        scaling_config:
+          desired_size: 2
+          max_size: 4
+          min_size: 1
+        disk_size: 20
+        instance_types:
+          - t3.medium
+        tags:
+          Environment: production
+        state: present
+        region: "{{ aws.region }}"
+        profile: "{{ aws.profile }}"
+        wait: yes
+      register: eks_nodegroup
+
+    - name: Wait for nodegroup to be active
+      ansible.builtin.pause:
+        seconds: 60
+      when: eks_nodegroup.changed
+
+    - name: Wait for nodes to be ready
+      ansible.builtin.command:
+        cmd: "kubectl wait --for=condition=Ready nodes --all --timeout=300s"
+      register: nodes_ready
+      retries: 10
+      delay: 30
+      until: nodes_ready is not failed
 
     - name: Verify connection to cluster
       ansible.builtin.command:
@@ -118,6 +246,7 @@
                   image: "{{ aws_caller_info.account }}.dkr.ecr.{{ aws.region }}.amazonaws.com/{{ ecr.repository }}:latest"
                   ports:
                     - containerPort: 80
+                  imagePullPolicy: Always
         state: present
 
     - name: Create LoadBalancer service
@@ -138,7 +267,6 @@
             selector:
               app: mag-site
 
-    # Verify and Output Results
     - name: Wait for LoadBalancer External hostname
       ansible.builtin.command: kubectl get svc mag-site -n {{ k8s.namespace }} -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
       register: loadbalancer_hostname
