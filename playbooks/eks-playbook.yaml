@@ -249,6 +249,54 @@
                   imagePullPolicy: Always
         state: present
 
+    - name: Request ACM certificate
+      ansible.builtin.command: >
+        aws acm request-certificate
+        --domain-name {{ domain.name }}
+        --validation-method DNS
+        --region {{ aws.region }}
+        --profile {{ aws.profile }}
+      register: certificate_request
+      changed_when: true
+
+    - name: Set certificate ARN
+      set_fact:
+        certificate_arn: "{{ (certificate_request.stdout | from_json).CertificateArn }}"
+
+    - name: Get certificate validation info
+      ansible.builtin.command: >
+        aws acm describe-certificate
+        --certificate-arn {{ certificate_arn }}
+        --region {{ aws.region }}
+        --profile {{ aws.profile }}
+      register: certificate_info
+      until: (certificate_info.stdout | from_json).Certificate.DomainValidationOptions[0].ResourceRecord is defined
+      retries: 10
+      delay: 5
+
+    - name: Display DNS validation records
+      debug:
+        msg: |
+          Please create the following DNS validation CNAME record in your DNS provider:
+          Name: {{ (certificate_info.stdout | from_json).Certificate.DomainValidationOptions[0].ResourceRecord.Name }}
+          Value: {{ (certificate_info.stdout | from_json).Certificate.DomainValidationOptions[0].ResourceRecord.Value }}
+
+    - name: Wait for certificate validation
+      ansible.builtin.command: >
+        aws acm describe-certificate
+        --certificate-arn {{ certificate_arn }}
+        --region {{ aws.region }}
+        --profile {{ aws.profile }}
+      register: cert_status
+      until: (cert_status.stdout | from_json).Certificate.Status == 'ISSUED'
+      retries: 60
+      delay: 30
+      ignore_errors: true
+
+    - name: Debug certificate_arn
+      debug:
+        var: certificate_arn
+
     - name: Create LoadBalancer service
       kubernetes.core.k8s:
         state: present
@@ -258,14 +306,40 @@
           metadata:
             name: mag-site
             namespace: "{{ k8s.namespace }}"
+            annotations:
+              service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "{{ certificate_arn }}"  # Changed from acm_certificate.certificate_arn
+              service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+              service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
+              service.beta.kubernetes.io/aws-load-balancer-ssl-negotiation-policy: "ELBSecurityPolicy-TLS-1-2-2017-01"
+              service.beta.kubernetes.io/aws-load-balancer-actions.ssl-redirect: >
+                {
+                  "type": "redirect",
+                  "redirectConfig": {
+                    "protocol": "HTTPS",
+                    "port": "443",
+                    "statusCode": "HTTP_301"
+                  }
+                }
           spec:
             type: LoadBalancer
             ports:
+              - port: 443
+                targetPort: 80
+                protocol: TCP
+                name: https
               - port: 80
                 targetPort: 80
                 protocol: TCP
+                name: http
             selector:
               app: mag-site
+
+    - name: Wait for LoadBalancer External hostname
+      ansible.builtin.command: kubectl get svc mag-site -n {{ k8s.namespace }} -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
+      register: loadbalancer_hostname
+      until: loadbalancer_hostname.stdout != ""
+      retries: 30
+      delay: 10
 
     - name: Wait for LoadBalancer External hostname
       ansible.builtin.command: kubectl get svc mag-site -n {{ k8s.namespace }} -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
@@ -283,8 +357,22 @@
       delay: 10
       ignore_errors: yes
 
-    - name: Output LoadBalancer Hostname
+    - name: Output LoadBalancer Hostname and Next Steps
       debug:
         msg: |
-          Website is available at http://{{ loadbalancer_hostname.stdout }}
-          Please allow a few minutes for DNS propagation and the service to be fully available.
+          Website configuration complete:
+          
+          1. Create a CNAME record in your DNS provider:
+             Name: {{ domain.name }}
+             Type: CNAME
+             Value: {{ loadbalancer_hostname.stdout }}
+          
+          2. The LoadBalancer is configured to:
+             - Serve HTTPS on port 443
+             - Automatically redirect HTTP to HTTPS
+             - Use AWS ACM certificate: {{ certificate_arn }}
+          
+          3. Please allow a few minutes for:
+             - DNS propagation
+             - SSL certificate validation
+             - LoadBalancer to become fully active

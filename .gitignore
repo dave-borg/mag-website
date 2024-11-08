@@ -2,6 +2,10 @@
 /public/
 /resources/_gen/
 
+# private contents
+/themes/tailbliss/content/company-details
+/themes/tailbliss/content/members-only
+
 # Hugo settings and logs
 hugo_stats.json
 
@@ -44,3 +48,4 @@ Icon?
 /themes/hugo-embed-pdf-shortcode
 
 /selenium-tests/target
+

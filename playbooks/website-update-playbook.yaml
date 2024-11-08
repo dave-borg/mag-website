@@ -1,0 +1,209 @@
+---
+# website-update-playbook.yaml
+- name: Deploy new Docker image version to EKS
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  vars_files:
+    - vars.yml
+
+  tasks:
+    - name: Check if required Python packages are installed
+      ansible.builtin.pip:
+        name:
+          - boto3
+          - kubernetes
+        state: present
+      become: yes
+
+    - name: Get AWS account ID
+      amazon.aws.aws_caller_info:
+        profile: "{{ aws.profile }}"
+      register: aws_caller_info
+
+    - name: Set ECR repository URI
+      set_fact:
+        ecr_registry: "{{ aws_caller_info.account }}.dkr.ecr.{{ aws.region }}.amazonaws.com"
+        repository_uri: "{{ aws_caller_info.account }}.dkr.ecr.{{ aws.region }}.amazonaws.com/{{ ecr.repository }}"
+
+    - name: Build Docker image with Buildx for AMD64
+      ansible.builtin.command: >
+        docker buildx build
+        --platform linux/amd64
+        -t {{ docker.local_image_name }}:{{ docker.img_tag }}
+        {{ docker.build_path }} --load
+      environment:
+        DOCKER_BUILDKIT: 1
+        DOCKER_HOST: "unix://{{ docker.socket_path }}"
+      register: build_result
+
+    - name: Tag image with ECR repository version
+      command: docker tag "{{ docker.local_image_name }}:{{ docker.img_tag }}" "{{ repository_uri }}:{{ docker.img_tag }}"
+      environment:
+        DOCKER_HOST: "unix://{{ docker.socket_path }}"
+
+    - name: Tag image with ECR repository latest
+      command: docker tag "{{ docker.local_image_name }}:{{ docker.img_tag }}" "{{ repository_uri }}:latest"
+      environment:
+        DOCKER_HOST: "unix://{{ docker.socket_path }}"
+
+    - name: Get ECR login token
+      community.docker.docker_login:
+        registry_url: "{{ ecr_registry }}"
+        username: AWS
+        password: "{{ lookup('pipe', 'aws ecr get-login-password --region ' + aws.region + ' --profile ' + aws.profile) }}"
+        reauthorize: true
+      environment:
+        DOCKER_HOST: "unix://{{ docker.socket_path }}"
+
+    - name: Push to ECR (version tag)
+      community.docker.docker_image:
+        source: local
+        name: "{{ repository_uri }}"
+        tag: "{{ docker.img_tag }}"
+        push: yes
+        force_tag: yes
+      environment:
+        DOCKER_HOST: "unix://{{ docker.socket_path }}"
+
+    - name: Push to ECR (latest tag)
+      community.docker.docker_image:
+        source: local
+        name: "{{ repository_uri }}"
+        tag: "latest"
+        push: yes
+        force_tag: yes
+      environment:
+        DOCKER_HOST: "unix://{{ docker.socket_path }}"
+
+    - name: Configure kubectl
+      ansible.builtin.command:
+        cmd: "aws eks update-kubeconfig --name {{ eks.cluster_name }} --region {{ aws.region }} --profile {{ aws.profile }}"
+      register: kubectl_config
+
+    - name: Get existing certificate ARN
+      community.aws.acm_certificate_info:
+        domain_name: "{{ domain.name }}"
+        profile: "{{ aws.profile }}"
+        region: "{{ aws.region }}"
+      register: existing_cert
+
+    # Rolling update strategy with HTTPS configuration
+    - name: Update Kubernetes deployment with new image
+      kubernetes.core.k8s:
+        definition:
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: mag-site
+            namespace: "{{ k8s.namespace }}"
+          spec:
+            replicas: 2
+            strategy:
+              type: RollingUpdate
+              rollingUpdate:
+                maxSurge: 1
+                maxUnavailable: 0
+            selector:
+              matchLabels:
+                app: mag-site
+            template:
+              metadata:
+                labels:
+                  app: mag-site
+              spec:
+                containers:
+                - name: mag-site
+                  image: "{{ repository_uri }}:{{ docker.img_tag }}"
+                  imagePullPolicy: Always
+                  ports:
+                    - containerPort: 80
+                  readinessProbe:
+                    httpGet:
+                      path: /
+                      port: 80
+                    initialDelaySeconds: 5
+                    periodSeconds: 5
+                  livenessProbe:
+                    httpGet:
+                      path: /
+                      port: 80
+                    initialDelaySeconds: 15
+                    periodSeconds: 20
+        state: present
+
+    - name: Update LoadBalancer service with HTTPS configuration
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: mag-site
+            namespace: "{{ k8s.namespace }}"
+            annotations:
+              service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "{{ existing_cert.certificates[0].certificate_arn }}"
+              service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+              service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
+              service.beta.kubernetes.io/aws-load-balancer-ssl-negotiation-policy: "ELBSecurityPolicy-TLS-1-2-2017-01"
+              service.beta.kubernetes.io/aws-load-balancer-actions.ssl-redirect: >
+                {
+                  "type": "redirect",
+                  "redirectConfig": {
+                    "protocol": "HTTPS",
+                    "port": "443",
+                    "statusCode": "HTTP_301"
+                  }
+                }
+          spec:
+            type: LoadBalancer
+            ports:
+              - port: 443
+                targetPort: 80
+                protocol: TCP
+                name: https
+              - port: 80
+                targetPort: 80
+                protocol: TCP
+                name: http
+            selector:
+              app: mag-site
+
+    - name: Wait for rollout to complete
+      ansible.builtin.command:
+        cmd: kubectl rollout status deployment/mag-site -n {{ k8s.namespace }}
+      register: rollout_status
+      until: rollout_status.rc == 0
+      retries: 30
+      delay: 10
+
+    # Clean up local Docker images
+    - name: Clean up ECR tags locally
+      community.docker.docker_image:
+        name: "{{ repository_uri }}"
+        tag: "{{ item }}"
+        state: absent
+      loop:
+        - "{{ docker.img_tag }}"
+        - latest
+      environment:
+        DOCKER_HOST: "unix://{{ docker.socket_path }}"
+
+    - name: Clean up local image
+      community.docker.docker_image:
+        name: "{{ docker.local_image_name }}"
+        tag: "{{ docker.img_tag }}"
+        state: absent
+      environment:
+        DOCKER_HOST: "unix://{{ docker.socket_path }}"
+
+    - name: Display deployment results
+      debug:
+        msg: |
+          New version {{ docker.img_tag }} has been deployed successfully with HTTPS enabled.
+          The deployment uses a rolling update strategy ensuring zero downtime.
+          - Old pods are removed only after new pods are healthy
+          - Health checks ensure the new version is working before scaling down old version
+          - The service remains available throughout the update
+          - All HTTP traffic will be automatically redirected to HTTPS
+          - Site is accessible at https://{{ domain.name }}

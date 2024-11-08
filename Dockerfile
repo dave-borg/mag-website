@@ -16,11 +16,16 @@ RUN npm install -D postcss postcss-cli autoprefixer
 # Copy the rest of the source
 COPY . .
 
+# Copy private content into the main theme
+RUN cp -r themes/mag-website-private/content/* themes/tailbliss/content/
+RUN cp -r themes/mag-website-private/assets/members-only/* themes/tailbliss/assets/members-only/
+
 # Build the site
 RUN hugo --minify
 
 # Production stage
-FROM nginx:alpine
+# FROM nginx:alpine
+FROM nginx:1-alpine-slim
 
 # Install apache2-utils for htpasswd utility
 RUN apk add --no-cache apache2-utils

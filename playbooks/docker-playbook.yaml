@@ -9,6 +9,11 @@
     project_root: "{{ playbook_dir }}"
 
   tasks:
+    - name: Copy mag-website-private contents into website
+      ansible.builtin.shell: cp -r ../themes/mag-website-private/content/* ../themes/tailbliss/content/
+      args:
+        chdir: "{{ project_root }}"
+    
     - name: Ensure required collections are installed
       ansible.builtin.pip:
         name:

@@ -2,10 +2,10 @@
 # aws-network-setup.yml
 - name: Setup AWS VPC and EKS Load Balancer
   hosts: localhost
-  gather_facts: no
+  gather_facts: false
   vars_files:
     - vars.yml
-  
+
   tasks:
     - name: Create VPC
       amazon.aws.ec2_vpc_net:
@@ -109,7 +109,6 @@
         rules:
           - proto: tcp
             ports:
-              - 80
+              - 443
             cidr_ip: 0.0.0.0/0
-            rule_desc: Allow HTTP from anywhere
-      register: lb_security_group
+            rule_desc: Allow HTTPS from anywhere
