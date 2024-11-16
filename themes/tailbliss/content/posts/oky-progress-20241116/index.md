@@ -24,7 +24,7 @@ images:
 
 ## OKY Panel Upgrade Progress
 
-Our Piper Archer’s avionics upgrade is progressing well! During a recent visit to our avionics partner, the panel layout was finalized and sent for powder coating in dark grey. For details on our panel upgrade check out our earlier post {{< ref "/posts/oky-panel-upgrade-20240731" >}}. While we're in there, we're going to upgrade to use modern backlit instruments, replacing the old post lighting, and a silky-smooth control column thanks to new bushings.
+Our Piper Archer’s avionics upgrade is progressing well! During a recent visit to our avionics partner, the panel layout was finalized and sent for powder coating in dark grey. For details on our panel upgrade check out our earlier post [OKY panel upgrade]({{% ref "/posts/oky-panel-upgrade-20240731" %}}). While we're in there, we're going to upgrade to use modern backlit instruments, replacing the old post lighting, and a silky-smooth control column thanks to new bushings.
 
 We’re also giving the interior a fresh look, with two-tone leather seats and complementing fabric sidewalls. While the carpets remain in great condition, they’ll be steam-cleaned to complete the refurbishment. The project is on track for completion before Christmas.
 
