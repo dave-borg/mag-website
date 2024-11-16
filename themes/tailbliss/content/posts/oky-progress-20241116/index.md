@@ -11,13 +11,13 @@ image_width: "600px"
 image_height: "400px"
 images:
   - src: "20241115_103645.jpg"
-    thumb: "20241115_103645.jpg"
+    thumb: "20241115_103645_thumb.jpg"
     alt: "OKY Panel off to be powder-coated"
   - src: "20241115_105609.jpg"
-    thumb: "20241115_105609.jpg"
+    thumb: "20241115_105609_thumb.jpg"
     alt: "Witness the art of transformation as our Piper Archer gets rewired"
   - src: "20241115_110301.jpg"
-    thumb: "20241115_110301.jpg"
+    thumb: "20241115_110301_thumb.jpg"
     alt: "New leather - oh yeah"
 
 ---
