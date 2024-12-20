@@ -44,7 +44,7 @@ Featuring:
 - Garmin GTX330 ADS-B Transponder
 - Garmin GMA340 Audio Panel
 
-OKY is booked in to have a panel upgrade at the end of 2024. The new panel will include:
+OKY is due back with its new panel upgrade early Jan 2024. The new panel will include:
 
 - GI275 ADAHRS w/GMU11
 - GFC 500 Autopilot 3 servos Pitch/Roll/Pitch Trim inclusive of GMC 507, Yoke trim switch and Smart. Includes Glide button on the panel
@@ -52,7 +52,7 @@ OKY is booked in to have a panel upgrade at the end of 2024. The new panel will 
 - GNX375 Transponder/GPS
 - GTR 205 COM
 
-Check more details on the [OKY panel upgrade]({{% ref "/posts/oky-panel-upgrade-20240731" %}}).
+Check more details on the [OKY panel upgrade]({{% ref "/posts/oky-panel-upgrade-20240731" %}}) and [here]({{% ref "/posts/oky-panel-upgrade-20241220" %}}).
 
 |                   |                  |
 |-------------------|------------------|
@@ -63,8 +63,11 @@ Check more details on the [OKY panel upgrade]({{% ref "/posts/oky-panel-upgrade-
 | **Cruise Speed**  | 120 kts           |
 
 - [VH-OKY Pilot's Operating Handbook](VH-OKY-Pilots-Operating-Handbook.pdf)
-- [Aspen Evolution EFD1000 Pilot's Guide](Aspen-Evolution-EFD1000-Pilots-Guide.pdf)
-- [Garmin GI 275 Pilot's Guide](GI275-PILOT.pdf)
-- [VH-OKY Checklist](IFR-Checklist-PA28-181-Arher-III-VH-OKY.pdf)
+- [GTN650 Navigator Pilot's Guide](GTN650XI_190-02327-03_f.pdf)
+- [GFC500 Autopilot](GFC500_190-02291-07_09.pdf)
+- [GI275 Multi Function Instrument Pilot's Guide](GI275 Pilots Guide.pdf)
+- [GNX375 Navigator Pilot's Guide](GI275 Pilots Guide.pdf)
+- [GTR205x Radio Pilot's Guide](GTR205_190-02766-22_a.pdf)
+- [OKY avionics quick guide](Quickguide_V1_B.pdf)
 
 {{< gallery >}}
