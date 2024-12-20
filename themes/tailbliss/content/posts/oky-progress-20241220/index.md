@@ -37,8 +37,8 @@ images:
 ## OKY Panel Upgrade Progress
 
 We’ve got some mixed news about OKY:
-	•	Good news: OKY’s weight has been reduced by 16kg!
-	•	Not-so-good news: The aircraft won’t be back in service until January 10th.
+- Good news: OKY’s weight has been reduced by 16kg!
+- Not-so-good news: The aircraft won’t be back in service until January 10th.
 
 Here’s the latest on OKY:
 
