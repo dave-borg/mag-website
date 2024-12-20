@@ -25,10 +25,10 @@ images:
   - src: "image004.jpg"
     thumb: "image004_thumb.jpg"
     alt: "650 looking glorious"
-  - src: "trim1.jpg"
+  - src: "trim1.png"
     thumb: "trim1_thumb.jpg"
     alt: "New rear trim"
-  - src: "trim2.jpg"
+  - src: "trim2.png"
     thumb: "trim1_thumb.jpg"
     alt: "New front trim"
 
