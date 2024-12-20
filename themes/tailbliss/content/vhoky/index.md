@@ -52,7 +52,7 @@ OKY is due back with its new panel upgrade early Jan 2024. The new panel will in
 - GNX375 Transponder/GPS
 - GTR 205 COM
 
-Check more details on the [OKY panel upgrade]({{% ref "/posts/oky-panel-upgrade-20240731" %}}) and [here]({{% ref "/posts/oky-panel-upgrade-20241220" %}}).
+Check more details on the [OKY panel upgrade]({{% ref "/posts/oky-panel-upgrade-20240731" %}}), [here]({{% ref "/posts/oky-progress-20241116" %}}) and [here]({{% ref "/posts/oky-progress-20241220" %}}).
 
 |                   |                  |
 |-------------------|------------------|
