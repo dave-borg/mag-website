@@ -68,6 +68,7 @@ Check more details on the [OKY panel upgrade]({{% ref "/posts/oky-panel-upgrade-
 - [GI275 Multi Function Instrument Pilot's Guide](GI275 Pilots Guide.pdf)
 - [GNX375 Navigator Pilot's Guide](GI275 Pilots Guide.pdf)
 - [GTR205x Radio Pilot's Guide](GTR205_190-02766-22_a.pdf)
-- [OKY avionics quick guide](Quickguide_V1_B.pdf)
+- [Rolf's avionics quick guide](Quickguide_V1_C.pdf)
+- [Rolf's Avionics Summary](Short-Summary-New-Avionics-in-OKY_V1c.pdf)
 
 {{< gallery >}}
