@@ -37,24 +37,17 @@ The ubiquitous PA28 is familiar to most pilots, serving as a solid trainer and g
   <script id="bopLogin" src="https://bookourplane.com/widget-login.js" data-club="70a3259b45211512acea13e076af7c1a" language="JavaScript" type="text/javascript" async="async"></script>
 </div>
 
-Our 1999 Archer III is about as good an example as you’ll find in Australia. Always maintained to IFR/NVFR standards.
+OKY has just been upgraded with a new panel and interior leather trim, making our 1999 Archer III about as good an example as you’ll find in Australia. Always maintained to IFR/NVFR standards.
 
 Featuring:
-
-- Aspen EFD1000 PFD
-- 2 x Garmin 430
-- S-TEC 50 Autopilot
-- FS450 Fuel Scan
-- Garmin GTX330 ADS-B Transponder
-- Garmin GMA340 Audio Panel
-
-OKY is due back with its new panel upgrade early Jan 2024. The new panel will include:
 
 - GI275 ADAHRS w/GMU11
 - GFC 500 Autopilot 3 servos Pitch/Roll/Pitch Trim inclusive of GMC 507, Yoke trim switch and Smart. Includes Glide button on the panel
 - GTN650XI Black GPS/NAV/COM incl of data card/databases
 - GNX375 Transponder/GPS
 - GTR 205 COM
+- FS450 Fuel Scan
+- Garmin GMA340 Audio Panel
 
 Check more details on the [OKY panel upgrade]({{% ref "/posts/oky-panel-upgrade-20240731" %}}), [here]({{% ref "/posts/oky-progress-20241116" %}}) and [here]({{% ref "/posts/oky-progress-20241220" %}}).
 
