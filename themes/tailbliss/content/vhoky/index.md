@@ -33,6 +33,10 @@ images:
 
 The ubiquitous PA28 is familiar to most pilots, serving as a solid trainer and great entry aircraft for decades.
 
+<div id="bookourplane-login-widget" style="float: right; margin: 0 0 10px 10px;">
+  <script id="bopLogin" src="https://bookourplane.com/widget-login.js" data-club="70a3259b45211512acea13e076af7c1a" language="JavaScript" type="text/javascript" async="async"></script>
+</div>
+
 Our 1999 Archer III is about as good an example as you’ll find in Australia. Always maintained to IFR/NVFR standards.
 
 Featuring:
