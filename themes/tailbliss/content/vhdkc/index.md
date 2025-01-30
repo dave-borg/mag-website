@@ -39,6 +39,10 @@ images:
 
 The C182 T is an outstanding touring and IFR aircraft. With fantastic endurance and payload, our members enjoy touring these aircraft all over Australia.
 
+<div id="bookourplane-login-widget" style="float: right; margin: 0 0 10px 10px;">
+  <script id="bopLogin" src="https://bookourplane.com/widget-login.js" data-club="70a3259b45211512acea13e076af7c1a" language="JavaScript" type="text/javascript" async="async"></script>
+</div>
+
 DKC is a low time 2006 aircraft in great shape. 
 
 Featuring:

@@ -19,7 +19,7 @@ images:
   - src: "20241115_110301.jpg"
     thumb: "20241115_110301_thumb.jpg"
     alt: "New leather - oh yeah"
-
+ 
 ---
 
 ## OKY Panel Upgrade Progress
