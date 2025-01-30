@@ -54,11 +54,11 @@ Featuring:
 |-------------------|------------------|
 | **Type**          | Cessna C182T     |
 | **Year**          | 2006             |
-| **Useful Load**   | 538 kgs ^1       |
+| **Useful Load**   | 538 kgs [^1]       |
 | **$/hr Wet**      | $338 airswitch (as at Jan '25)   |
 | **Cruise Speed**  | 145 kts          |
 
-^1 Refer to POH
+[^1] Refer to POH
 
 - [VH-DKC Pilot's Operating Handbook](VH-DKC-POH.pdf)
 - [KAP 140 Pilots Guide](KAP-140-Pilots-Guide.pdf)
