@@ -5,30 +5,37 @@ draft: false
 language: en
 description: "PA28 VH-OKY"
 images:
-  - src: "/images/pages/vhoky/IMG_0445.png"
-    thumb: "/images/pages/vhoky/IMG_0445_thumb.png"
-    alt: "Cessna C182T on the runway"
-  - src: "/images/pages/vhoky/IMG_0566.png"
-    thumb: "/images/pages/vhoky/IMG_0566_thumb.png"
-    alt: "Cessna C182T on the runway"
-  - src: "/images/pages/vhoky/IMG_0573.png"
-    thumb: "/images/pages/vhoky/IMG_0573_thumb.png"
-    alt: "Cessna C182T on the runway"
-  - src: "/images/pages/vhoky/IMG_0574.png"
-    thumb: "/images/pages/vhoky/IMG_0574_thumb.png"
-    alt: "Cessna C182T on the runway"
-  - src: "/images/pages/vhoky/IMG_0584.png"
-    thumb: "/images/pages/vhoky/IMG_0584_thumb.png"
-    alt: "Cessna C182T on the runway"
-  - src: "/images/pages/vhoky/IMG_0585.png"
-    thumb: "/images/pages/vhoky/IMG_0585_thumb.png"
-    alt: "Cessna C182T on the runway"
-  - src: "/images/pages/vhoky/IMG_1529.png"
-    thumb: "/images/pages/vhoky/IMG_1529_thumb.png"
-    alt: "Cessna C182T on the runway"
-  - src: "/images/pages/vhoky/DA3A1B99-6345-4345-9504-542DF93CAF47.png"
-    thumb: "/images/pages/vhoky/DA3A1B99-6345-4345-9504-542DF93CAF47_thumb.png"
-    alt: "Cessna C182T on the runway"
+  - src: "/images/pages/vhoky/oky-archer-decal-thumb.png"
+    thumb: "/images/pages/vhoky/oky-archer-decal-thumb.png"
+    alt: "Piper Archer decal"
+  - src: "/images/pages/vhoky/oky-autopilot-glide.png"
+    thumb: "/images/pages/vhoky/oky-autopilot-glide-thumb.png"
+    alt: "Auto glide button"
+  - src: "/images/pages/vhoky/oky-callsign.png"
+    thumb: "/images/pages/vhoky/oky-callsign-thumb.png"
+    alt: "Callsign decal"
+  - src: "/images/pages/vhoky/oky-leather-trim.png"
+    thumb: "/images/pages/vhoky/oky-leather-trim-thumb.png"
+    alt: "New leather interior"
+  - src: "/images/pages/vhoky/oky-overhead.png"
+    thumb: "/images/pages/vhoky/oky-overhead-thumb.png"
+    alt: "OKY Overhead switches"
+  - src: "/images/pages/vhoky/oky-radio-stack.png"
+    thumb: "/images/pages/vhoky/oky-radio-stack-thumb.png"
+    alt: "New radio stack"
+  - src: "/images/pages/vhoky/oky-side.png"
+    thumb: "/images/pages/vhoky/oky-side-thumb.png"
+    alt: "OKY side view"
+  - src: "/images/pages/vhoky/oky-stormy-sky.png"
+    thumb: "/images/pages/vhoky/oky-stormy-sky-thumb.png"
+    alt: "OKY under an unsettled sky"
+  - src: "/images/pages/vhoky/oky-stormy-spinner.png"
+    thumb: "/images/pages/vhoky/oky-stormy-spinner-thumb.png"
+    alt: "OKY spinner"
+  - src: "/images/pages/vhoky/oky-tail-decal.png"
+    thumb: "/images/pages/vhoky/oky-tail-decal-thumb.png"
+    alt: "OKY tail decal"
+  
 ---
 
 The ubiquitous PA28 is familiar to most pilots, serving as a solid trainer and great entry aircraft for decades.
@@ -68,6 +75,7 @@ Check more details on the [OKY panel upgrade]({{% ref "/posts/oky-panel-upgrade-
 - [GNX375 Navigator Pilot's Guide](GNX375_190-02488-01_c.pdf)
 - [GTR205x Radio Pilot's Guide](GTR205_190-02766-22_a.pdf)
 - [Rolf's avionics quick guide](Quickguide_V1_C.pdf)
-- [Rolf's Avionics Summary](Short-Summary-New-Avionics-in-OKY_V1c.pdf)
+- [Rolf's avionics summary](Short-Summary-New-Avionics-in-OKY_V1c.pdf)
+- [Rolf's IFR Checklist](IFR-Checklist-PA28-181-Archer-III-VH-OKY-v2c.pdf)
 
 {{< gallery >}}
