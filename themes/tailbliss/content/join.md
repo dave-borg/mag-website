@@ -8,7 +8,7 @@ description: Joining MAG
 featured_image: ../assets/images/global/logo.png
 ---
 
-## How to Join MAG
+## How to Join MAG 
 
 1. **Express Interest**
    - Contact MAG to express your interest in joining. Fill in the form on this page, or email [membership@mag.com.au](mailto:membership@mag.com.au)
