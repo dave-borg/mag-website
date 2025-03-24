@@ -6,4 +6,4 @@ theme = ['hugo-embed-pdf-shortcode','tailbliss']
 enableInlineShortcodes = true
 
 [markup.goldmark.renderer]
-unsafe = true
+unsafe = true 
