@@ -8,7 +8,7 @@ description: FAQ
 
 ## What am I buying a share in?
 
-When you purchase a share, you are buying an equal share in Melbourne Aviation Group Pty Ltd (ABN 62 004 589 557) a company that owns two aircraft. You do not buy a share of a specific aircraft. There are 38 equal shareholdings in Melbourne Aviation Group Pty Ltd. 
+When you purchase a share, you are buying an equal share in Melbourne Aviation Group Pty Ltd (ABN 62 004 589 557) a company that owns two aircraft. You do not buy a share of a specific aircraft. There are 38 equal shareholdings in Melbourne Aviation Group Pty Ltd.
 
 ## How easy is it to book the aircraft?
 
@@ -56,6 +56,6 @@ Check the page [Joining MAG](/join/) for more details.
 
 You can find our [Privacy Policy here](/privacy-policy).
 
-### TLDR; 
+### TLDR;
 
 In short, MAG will never sell or provide your details to anyone. We are a non-profit organisation and have no interest in monetising mailing lists. We only collect your details in order to provide membership information and group updates.
