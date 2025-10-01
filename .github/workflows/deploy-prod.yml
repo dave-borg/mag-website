@@ -40,9 +40,9 @@ jobs:
         printf '\n' >> themes/tailbliss/static/.htpasswd
         echo '${{ secrets.MAG_HTPASSWD_COMPANY_BASE64 }}' | base64 --decode >> themes/tailbliss/static/.htpasswd
 
-    - name: Initialize and update submodules
+    - name: Configure Git for submodules
       run: |
-        git config --global url."https://x-access-token:${{ secrets.GH_PAT_PRIVATE }}@github.com/".insteadOf "https://github.com/"
+        git config --global url."https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
         git submodule update --init --recursive
         cd themes/mag-website-private
         git fetch origin
