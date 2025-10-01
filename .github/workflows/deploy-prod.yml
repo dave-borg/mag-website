@@ -59,7 +59,7 @@ jobs:
     - name: Copy contact list into assets
       run: cp -r themes/mag-website-private/assets/members-only themes/tailbliss/assets/
 
-    - name: Build
+    - name: Build 
       run: hugo --minify
 
     - name: Start SSH agent and add key
