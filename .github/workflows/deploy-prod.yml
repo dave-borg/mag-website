@@ -42,7 +42,7 @@ jobs:
 
     - name: Configure Git for submodules
       run: |
-        git config --global url."https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
+        git config --global url."https://x-access-token:${{ secrets.GH_PAT_PRIVATE }}@github.com/".insteadOf "https://github.com/"
         git submodule update --init --recursive
         cd themes/mag-website-private
         git fetch origin
